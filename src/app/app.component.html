@@ -39,13 +39,13 @@
             <mat-label>First Name</mat-label>
             <input matInput placeholder="First Name" formControlName="firstName">
           </mat-form-field>
-  
+
           <mat-form-field style="width: 400px">
             <mat-label>Last Name</mat-label>
             <input matInput placeholder="Last Name" formControlName="lastName">
           </mat-form-field>
         </div>
-  
+
         <div style="margin-top: 20px">
           <mat-form-field style="width: 400px">
             <mat-label>Street Address</mat-label>
@@ -105,10 +105,10 @@
           <button mat-button matStepperNext>Next</button>
         </div>
       </form>
-      </mat-step>
-      <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true">
-        <form [formGroup]="problemDetailsFormGroup">
-          <ng-template matStepLabel>Problem Details</ng-template>
+    </mat-step>
+    <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true">
+      <form [formGroup]="problemDetailsQuestionsFormGroup">
+        <ng-template matStepLabel>Problem Details</ng-template>
         <div *ngFor="let question of problemDetailsQuestions">
           <ng-container *ngIf="question.type === 'free-text'">
             <mat-form-field style="min-width: 400px; width: 80%">
@@ -118,7 +118,7 @@
             </mat-form-field>
           </ng-container>
           <ng-container *ngIf="question.type === 'multiple-choice'">
-        
+
             <mat-form-field style="width: 400px">
               <mat-label>{{ question.questionText }}</mat-label>
               <mat-select [formControlName]="question.questionText">
@@ -132,7 +132,29 @@
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
         </div>
-        </form>
-        </mat-step>
-        </mat-stepper>
-        </div>
+      </form>
+      </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+    
+      <section>
+        <h3>Product</h3>
+    
+        <dl>
+          <dt>Brand</dt>
+          <dd>{{ productFormGroup.controls["brand"].value }}</dd>
+    
+          <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
+            <dt>Lot Number</dt>
+            <dd>{{ lotNumber }}</dd>
+          </ng-container>
+        </dl>
+      </section>
+    
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button>Submit</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+  </div>

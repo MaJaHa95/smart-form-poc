@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormRecord, ValidatorFn, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { firstValueFrom, map, Subject, takeUntil } from "rxjs";
+import { filter, map, Subject, switchMap, takeUntil } from "rxjs";
 import { Question } from "./questions";
-import { QuestionsService } from "./services/questions.service";
+import { IQuestionsRequest, IQuestionsRequestAnswer, QuestionsService } from "./services/questions.service";
 import { IContactInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
 
 type FormGroupType<T> = { [k in keyof T]: FormControl<T[k]> };
@@ -21,10 +21,12 @@ export class AppComponent implements OnDestroy {
   readonly productFormGroup: FormGroup<FormGroupType<IProductInformation>>;
   readonly contactInformationFormGroup: FormGroup<FormGroupType<IContactInformation>>;
   readonly problemSummaryFormGroup: FormGroup<FormGroupType<IProblemSummary>>;
-  readonly problemDetailsFormGroup: FormRecord;
+  readonly problemDetailsFormGroup: FormGroup;
+  readonly problemDetailsQuestionsFormGroup: FormRecord;
   problemDetailsQuestions: Question[] = [];
 
   private readonly destroy$ = new Subject<void>();
+  private readonly readyForMoreQuestions$ = new Subject<void>();
 
   constructor(private readonly questionsService: QuestionsService, activedRoute: ActivatedRoute, fb: FormBuilder) {
     this.productFormGroup = fb.group<FormGroupType<IProductInformation>>({
@@ -49,7 +51,20 @@ export class AppComponent implements OnDestroy {
       images: fb.control<File[]>([], { nonNullable: true })
     });
 
-    this.problemDetailsFormGroup = fb.record({});
+    const problemDetailsDoneControl = fb.control<boolean>(false, [Validators.requiredTrue]);
+    this.problemDetailsQuestionsFormGroup = fb.record({});
+    this.problemDetailsFormGroup = fb.group({
+      done: problemDetailsDoneControl,
+      questions: this.problemDetailsQuestionsFormGroup
+    });
+    this.problemDetailsQuestionsFormGroup.statusChanges
+      .pipe(
+        filter(c => c === "VALID"),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(status => {
+        this.getNextQuestions();
+      });
 
     activedRoute.queryParamMap
       .pipe(
@@ -62,6 +77,55 @@ export class AppComponent implements OnDestroy {
       .subscribe(c => {
         this.productFormGroup.setValue(c);
       });
+
+    this.readyForMoreQuestions$.pipe(
+      map((): IQuestionsRequest => {
+
+        const product = this.productFormGroup.value;
+        const problemSummary = this.problemSummaryFormGroup.value;
+        const problemDetails = this.problemDetailsQuestionsFormGroup.value;
+
+        const answeredQuestions: IQuestionsRequestAnswer[] = [];
+        for (const question of this.problemDetailsQuestions) {
+          const response = problemDetails[question.questionText];
+          answeredQuestions.push({ questionText: question.questionText, response });
+        }
+
+        return {
+          product: {
+            brand: product.brand!,
+            lotNumber: product.lotNumber ?? null
+          },
+          userType: problemSummary.userType!,
+          verbatim: problemSummary.issueVerbatim!,
+
+          answeredQuestions
+        };
+      }),
+      switchMap(c => this.questionsService.getNextQuestions(c)),
+      takeUntil(this.destroy$)
+    ).subscribe(resp => {
+      if (resp.done) {
+        problemDetailsDoneControl.setValue(true);
+        return;
+      }
+
+      const problemDetailsQuestions = [...this.problemDetailsQuestions];
+
+      for (const question of resp.questions) {
+        const validators: ValidatorFn[] = [];
+        if (question.required) {
+          validators.push(Validators.required);
+        }
+
+        console.log("Adding control", question.questionText);
+
+        this.problemDetailsQuestionsFormGroup.addControl(question.questionText, fb.control<string>("", { validators }));
+        problemDetailsQuestions.push(question);
+      }
+
+      this.problemDetailsQuestions = problemDetailsQuestions;
+    });
   }
 
   ngOnDestroy() {
@@ -69,38 +133,20 @@ export class AppComponent implements OnDestroy {
   }
 
   async onProblemSummarySubmitted() {
-    for (const k in this.problemDetailsFormGroup.controls) {
-      if (!Object.prototype.hasOwnProperty.call(this.problemDetailsFormGroup.controls, k)) {
+    for (const k in this.problemDetailsQuestionsFormGroup.controls) {
+      if (!Object.prototype.hasOwnProperty.call(this.problemDetailsQuestionsFormGroup.controls, k)) {
         continue;
       }
 
-      this.problemDetailsFormGroup.removeControl(k);
+      this.problemDetailsQuestionsFormGroup.removeControl(k);
     }
 
-    const problemDetailsQuestions: Question[] = [];
+    this.problemDetailsQuestions = [];
 
-    const product = this.productFormGroup.value;
-    const problemSummary = this.problemSummaryFormGroup.value;
+    this.getNextQuestions();
+  }
 
-    const resp = await firstValueFrom(this.questionsService.getNextQuestions({
-      product: {
-        brand: product.brand!,
-        lotNumber: product.lotNumber ?? null
-      },
-      userType: problemSummary.userType!,
-      verbatim: problemSummary.issueVerbatim!
-    }));
-
-    for (const question of resp.questions) {
-      const validators: ValidatorFn[] = [];
-      if (question.required) {
-        validators.push(Validators.required);
-      }
-
-      this.problemDetailsFormGroup.addControl(question.questionText, new FormControl<string>("", validators));
-      problemDetailsQuestions.push(question);
-    }
-
-    this.problemDetailsQuestions = problemDetailsQuestions;
+  private getNextQuestions() {
+    this.readyForMoreQuestions$.next();
   }
 }
