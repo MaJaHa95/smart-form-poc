@@ -1,5 +1,7 @@
 .wizard-container {
-    padding: 0 100px;
+    @media screen and (min-width: 800px) {
+        padding: 0 100px;
+    }
 
     .wizard-label {
         &.invalid {
@@ -8,6 +10,13 @@
     }
 }
 
-form mat-form-field + mat-form-field {
-    margin-left: 8px;
+.default-control-width {
+    width: 100%;
+    max-width: 400px;
+}
+
+@media screen and (min-width: 800px) {
+    form mat-form-field + mat-form-field {
+        margin-left: 8px;
+    }
 }

@@ -1,7 +1,9 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormRecord, ValidatorFn, Validators } from "@angular/forms";
+import { StepperOrientation } from '@angular/material/stepper';
 import { ActivatedRoute } from "@angular/router";
-import { filter, map, Subject, switchMap, takeUntil } from "rxjs";
+import { filter, map, Observable, Subject, switchMap, takeUntil } from "rxjs";
 import { Question } from "./questions";
 import { IQuestionsRequest, IQuestionsRequestAnswer, QuestionsService } from "./services/questions.service";
 import { IContactInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
@@ -25,10 +27,22 @@ export class AppComponent implements OnDestroy {
   readonly problemDetailsQuestionsFormGroup: FormRecord;
   problemDetailsQuestions: Question[] = [];
 
+  readonly stepperOrientation: Observable<StepperOrientation>;
+
   private readonly destroy$ = new Subject<void>();
   private readonly readyForMoreQuestions$ = new Subject<void>();
 
-  constructor(private readonly questionsService: QuestionsService, activedRoute: ActivatedRoute, fb: FormBuilder) {
+  constructor(
+    private readonly questionsService: QuestionsService,
+    activedRoute: ActivatedRoute,
+    fb: FormBuilder,
+    breakpointObserver: BreakpointObserver
+  ) {
+
+    this.stepperOrientation = breakpointObserver
+      .observe('(min-width: 1000px)')
+      .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+
     this.productFormGroup = fb.group<FormGroupType<IProductInformation>>({
       brand: fb.control<string>("", { nonNullable: true, validators: [Validators.required] }),
       lotNumber: fb.control<string>("", {})
