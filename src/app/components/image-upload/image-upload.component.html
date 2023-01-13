@@ -1,0 +1,26 @@
+<div>
+    <input #csvInput multiple hidden="true" type="file" onclick="this.value=null"
+        (change)="onFile($any($event.target).files)" accept="image/*" />
+    <button mat-flat-button color="primary" (click)="openFilePicker(csvInput)">{{ text }}</button>
+</div>
+
+<div *ngIf="images.length > 0" style="display: flex">
+    <!-- <div *ngFor="let image of images">
+        <p><a href="{{ image.previewUrl }}">{{ image.file.name }}</a></p>
+        <img src="{{ image.previewUrl }}" alt="{{ image.file.name }}" height="80px" />
+    </div> -->
+    <!-- <mat-card *ngFor="let image of images">
+        <mat-card-header>
+            <mat-card-title>{{ image.file.name }}</mat-card-title>
+        </mat-card-header>
+        <img *ngIf="image.previewUrl" mat-card-sm-image src="{{ image.previewUrl }}" alt="{{ image.file.name }}" />
+    </mat-card> -->
+
+    <mat-list>
+        <mat-list-item *ngFor="let image of images">
+            <img matListItemAvatar src="{{ image.previewUrl }}" alt="{{ image.file.name }}">
+            <h3 matListItemTitle>{{ image.file.name }}</h3>
+            <span matListItemLine><a role="button" href (click)="removeImage(image)">Remove</a></span>
+        </mat-list-item>
+    </mat-list>
+</div>

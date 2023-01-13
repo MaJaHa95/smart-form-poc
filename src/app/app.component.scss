@@ -1,3 +1,13 @@
 .wizard-container {
     padding: 0 100px;
+
+    .wizard-label {
+        &.invalid {
+            color: red;
+        }
+    }
+}
+
+form mat-form-field + mat-form-field {
+    margin-left: 8px;
 }
