@@ -1,7 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { map, Subject, takeUntil } from "rxjs";
 import { IProductInformation } from "./types";
+
+type IProductInformationFormGroupType = { [k in keyof IProductInformation]: FormControl<IProductInformation[k] | null> };
 
 @Component({
   selector: 'app-root',
@@ -15,15 +18,16 @@ export class AppComponent implements OnDestroy {
   problemDetailsReady = false;
   reviewReady = false;
 
-  product: IProductInformation = {
-    brand: "",
-    lotNumber: ""
-  }
-  //productFormGroup: Formg
+  readonly productFormGroup: FormGroup<IProductInformationFormGroupType>;
 
   private readonly destroy$ = new Subject<void>();
 
   constructor(activedRoute: ActivatedRoute) {
+    this.productFormGroup = new FormGroup<IProductInformationFormGroupType>({
+      brand: new FormControl<string>(""),
+      lotNumber: new FormControl<string>(""),
+    })
+
     activedRoute.queryParamMap
       .pipe(
         map((c): IProductInformation => ({
@@ -33,7 +37,7 @@ export class AppComponent implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(c => {
-        this.product = c;
+        this.productFormGroup.setValue(c);
       });
   }
 
