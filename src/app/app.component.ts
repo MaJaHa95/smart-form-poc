@@ -101,8 +101,8 @@ export class AppComponent implements OnDestroy {
 
         const answeredQuestions: IQuestionsRequestAnswer[] = [];
         for (const question of this.problemDetailsQuestions) {
-          const response = problemDetails[question.questionText];
-          answeredQuestions.push({ questionText: question.questionText, response });
+          const response = problemDetails[question.id];
+          answeredQuestions.push({ questionId: question.id, response });
         }
 
         return {
@@ -132,9 +132,7 @@ export class AppComponent implements OnDestroy {
           validators.push(Validators.required);
         }
 
-        console.log("Adding control", question.questionText);
-
-        this.problemDetailsQuestionsFormGroup.addControl(question.questionText, fb.control<string>("", { validators }));
+        this.problemDetailsQuestionsFormGroup.addControl(question.id, fb.control<string>("", { validators }));
         problemDetailsQuestions.push(question);
       }
 

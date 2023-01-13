@@ -113,7 +113,7 @@
           <ng-container *ngIf="question.type === 'free-text'">
             <mat-form-field style="min-width: 400px; width: 80%">
               <mat-label>{{ question.questionText }}</mat-label>
-              <textarea matInput [formControlName]="question.questionText"></textarea>
+              <textarea matInput [formControlName]="question.id"></textarea>
               <mat-hint>{{ question.helpText }}</mat-hint>
             </mat-form-field>
           </ng-container>
@@ -121,8 +121,8 @@
 
             <mat-form-field class="default-control-width">
               <mat-label>{{ question.questionText }}</mat-label>
-              <mat-select [formControlName]="question.questionText">
-                <mat-option *ngFor="let opt of question.options" [value]="opt">{{ opt }}</mat-option>
+              <mat-select [formControlName]="question.id">
+                <mat-option *ngFor="let opt of question.options" [value]="opt.name">{{ opt.name }}</mat-option>
               </mat-select>
             </mat-form-field>
           </ng-container>

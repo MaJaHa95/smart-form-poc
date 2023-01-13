@@ -4,7 +4,7 @@ import { Question } from "../questions";
 import { IProductInformation, UserTypes } from "../types";
 
 export interface IQuestionsRequestAnswer {
-  questionText: string;
+  questionId: string;
   response: string;
 }
 
@@ -22,83 +22,96 @@ export interface IQuestionsResponse {
   questions: Question[];
 }
 
-interface IQuestionMultiAnswer {
-  questionText: string;
-  responses: string[];
-}
 
-interface IQuestionCandidate {
-  brands?: string[];
-  prerequisiteAnswers?: IQuestionMultiAnswer[];
-  question: Question;
-}
-
-const allQuestions: IQuestionCandidate[] = [
-  {
-    brands: ["Tremfya"],
-    question: {
-      type: "multiple-choice",
-      required: true,
-      questionText: "How experienced are you with Tremfya?",
-      options: [
-        "This was my first time",
-        "I'm somewhat experienced",
-        "I've been using it for a long time"
-      ]
+const allQuestions: Question[] = [{
+  id: "how_experienced",
+  type: "multiple-choice",
+  required: true,
+  questionText: "How experienced are you with Tremfya?",
+  options: [
+    {
+      name: "This was my first time",
+      nextQuestionId: "how_did_you_learn"
+    },
+    {
+      name: "I'm somewhat experienced"
+    },
+    {
+      name: "I've been using it for a long time"
     }
-  },
+  ]
+},
   {
-    brands: ["Tremfya"],
-    prerequisiteAnswers: [
+    id: "how_did_you_learn",
+    type: "multiple-choice",
+    required: true,
+    questionText: "How did you learn how to use the injector?",
+    options: [
       {
-        questionText: "How experienced are you with Tremfya?",
-        responses: ["This was my first time"]
+        name: "My healthcare provider showed me"
+      },
+      {
+        name: "I read the instructions"
+      },
+      {
+        name: "I watched videos online"
       }
-    ],
-    question: {
-      type: "multiple-choice",
-      required: true,
-      questionText: "How did you learn how to use the injector?",
-      options: [
-        "My healthcare provider showed me",
-        "I read the instructions",
-        "I watched videos online",
-      ]
-    }
+    ]
   }
 ];
+
+const allQuestionsMap = new Map(allQuestions.map(x => [x.id, x]));
 
 @Injectable({
   providedIn: 'root'
 })
 export class QuestionsService {
   getNextQuestions(request: IQuestionsRequest): Observable<IQuestionsResponse> {
-    const answersMap = new Map(request.answeredQuestions.map(x => [x.questionText, x.response]));
+    if (request.answeredQuestions.length === 0) {
+      return of({
+        done: false,
+        questions: [allQuestions[0]]
+      });
+    }
 
-    const candidates = allQuestions.filter(candidate => {
-      if (answersMap.get(candidate.question.questionText)) {
-        return false;
+    const lastAnswer = request.answeredQuestions[request.answeredQuestions.length - 1];
+
+    const lastQuestion = allQuestionsMap.get(lastAnswer.questionId);
+
+    if (!lastQuestion) {
+      return of({
+        done: true,
+        questions: []
+      });
+    }
+
+    let nextQuestionId: string | undefined;
+
+    switch (lastQuestion.type) {
+      case "free-text": {
+        nextQuestionId = lastQuestion.nextQuestionId;
+
+        break;
       }
+      case "multiple-choice": {
+        nextQuestionId = lastQuestion.options.find(c => c.name === lastAnswer.response)?.nextQuestionId;
 
-      if (candidate.brands && !candidate.brands.includes(request.product.brand)) {
-        return false;
+        break;
       }
+    }
 
-      if (candidate.prerequisiteAnswers) {
-        for (const prereq of candidate.prerequisiteAnswers) {
-          const answer = answersMap.get(prereq.questionText);
-          if (!answer || !prereq.responses.includes(answer)) {
-            return false;
-          }
-        }
-      }
+    const nextQuestion = nextQuestionId ? allQuestionsMap.get(nextQuestionId) : undefined;
 
-      return true;
-    });
+    if (!nextQuestion) {
+      return of({
+        done: true,
+        questions: []
+      });
+    }
 
     return of({
-      done: candidates.length === 0,
-      questions: candidates.map(c => c.question)
-    })
+      done: false,
+      questions: [nextQuestion]
+    });
   }
 }
