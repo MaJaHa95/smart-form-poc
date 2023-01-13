@@ -62,16 +62,34 @@ const allQuestions: Question[] = [{
 
 const allQuestionsMap = new Map(allQuestions.map(x => [x.id, x]));
 
+const brandEntrypoints: Record<string, string> = {
+  "Tremfya": "how_experienced",
+  "Stelara": "how_experienced",
+  "Simponi": "how_experienced"
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class QuestionsService {
   getNextQuestions(request: IQuestionsRequest): Observable<IQuestionsResponse> {
     if (request.answeredQuestions.length === 0) {
-      return of({
-        done: false,
-        questions: [allQuestions[0]]
-      });
+      const brandEntrypoint = brandEntrypoints[request.product.brand];
+
+      if (brandEntrypoint) {
+        return of({
+          done: false,
+          questions: [allQuestions[0]]
+        });
+      }
+      else {
+        console.error("No questions found for brand:", request.product.brand);
+
+        return of({
+          done: true,
+          questions: []
+        });
+      }
     }
 
     const lastAnswer = request.answeredQuestions[request.answeredQuestions.length - 1];
