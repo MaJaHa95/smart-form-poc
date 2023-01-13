@@ -3,134 +3,117 @@
 </mat-toolbar>
 
 <div class="wizard-container">
-  <mat-tab-group dynamicHeight [(selectedIndex)]="currentStepIndex">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <span class="wizard-label" [class.invalid]="currentStepIndex > 0 && productFormGroup.invalid">
-          Product Confirmation
-        </span>
-      </ng-template>
 
-      <h2>Product Confirmation</h2>
-
-      <form [formGroup]="productFormGroup">
-        <div>
-          <mat-form-field style="width: 400px">
-            <mat-label>Product Brand</mat-label>
-            <mat-select formControlName="brand">
-              <mat-option value="Simponi">Simponi</mat-option>
-              <mat-option value="Tremfya">Tremfya</mat-option>
-              <mat-option value="Stelara">Stelara</mat-option>
-            </mat-select>
-          </mat-form-field>
+<mat-stepper linear #stepper>
+  <mat-step [stepControl]="productFormGroup" [editable]="false">
+    <form [formGroup]="productFormGroup">
+      <ng-template matStepLabel>Product Confirmation</ng-template>
+      <div>
+        <mat-form-field style="width: 400px">
+          <mat-label>Product Brand</mat-label>
+          <mat-select formControlName="brand">
+            <mat-option value="Simponi">Simponi</mat-option>
+            <mat-option value="Tremfya">Tremfya</mat-option>
+            <mat-option value="Stelara">Stelara</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field style="width: 400px">
+          <mat-label>Lot Number</mat-label>
+          <input matInput placeholder="Lot Number" formControlName="lotNumber">
+          <mat-hint>You can find this on the product packaging.</mat-hint>
+        </mat-form-field>
+      </div>
+      <div style="margin-top: 20px">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="contactInformationFormGroup" [editable]="true">
+    <form [formGroup]="contactInformationFormGroup">
+      <ng-template matStepLabel>Contact Information</ng-template>
+      <div>
+        <mat-form-field style="width: 400px">
+          <mat-label>First Name</mat-label>
+          <input matInput placeholder="First Name" formControlName="firstName">
+        </mat-form-field>
+      
+        <mat-form-field style="width: 400px">
+          <mat-label>Last Name</mat-label>
+          <input matInput placeholder="Last Name" formControlName="lastName">
+        </mat-form-field>
+      </div>
+      
+      <div style="margin-top: 20px">
+        <mat-form-field style="width: 400px">
+          <mat-label>Street Address</mat-label>
+          <input matInput placeholder="Street Address" formControlName="streetAddress">
+        </mat-form-field>
+        <mat-form-field style="width: 400px">
+          <mat-label>Street Address 2</mat-label>
+          <input matInput placeholder="Street Address 2" formControlName="streetAddress2">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field style="width: 400px">
+          <mat-label>City</mat-label>
+          <input matInput placeholder="City" formControlName="city">
+        </mat-form-field>
+        <mat-form-field style="width: 400px">
+          <mat-label>State</mat-label>
+          <input matInput placeholder="State" formControlName="state">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field style="width: 400px">
+          <mat-label>Zip/Postal Code</mat-label>
+          <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
+        </mat-form-field>
+      </div>
+      <div style="margin-top: 20px">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="problemSummaryFormGroup" [editable]="false">
+    <form [formGroup]="problemSummaryFormGroup">
+      <ng-template matStepLabel>Problem Summary</ng-template>
+      <div>
+        <mat-form-field style="width: 400px">
+          <mat-label>What is your role?</mat-label>
+          <mat-select formControlName="userType">
+            <mat-option [value]="UserTypes.Patient">Patient</mat-option>
+            <mat-option [value]="UserTypes.Doctor">Doctor</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field style="min-width: 400px; width: 80%">
+          <mat-label>Describe your issue</mat-label>
+          <textarea matInput formControlName="issueVerbatim"></textarea>
+          <mat-hint>Please include any details that may be relevant.</mat-hint>
+        </mat-form-field>
+      </div>
+      <div style="margin-top: 10px">
+        <app-image-upload formControlName="images" text="Upload images (optional)"></app-image-upload>
+      </div>
+      <div style="margin-top: 20px">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
         </div>
-        <div>
-          <mat-form-field style="width: 400px">
-            <mat-label>Lot Number</mat-label>
-            <input matInput placeholder="Lot Number" formControlName="lotNumber">
-            <mat-hint>You can find this on the product packaging.</mat-hint>
-          </mat-form-field>
-        </div>
-      </form>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <span class="wizard-label" [class.invalid]="currentStepIndex > 1 && contactInformationFormGroup.invalid">
-          Contact Information
-        </span>
-        </ng-template>
-        
-        <h2>Contact Information</h2>
-        
-        <form [formGroup]="contactInformationFormGroup">
-          <div>
-            <mat-form-field style="width: 400px">
-              <mat-label>First Name</mat-label>
-              <input matInput placeholder="First Name" formControlName="firstName">
-            </mat-form-field>
-        
-            <mat-form-field style="width: 400px">
-              <mat-label>Last Name</mat-label>
-              <input matInput placeholder="Last Name" formControlName="lastName">
-            </mat-form-field>
-          </div>
-        
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true">
+        <form [formGroup]="problemDetailsFormGroup">
+          <ng-template matStepLabel>Problem Details</ng-template>
           <div style="margin-top: 20px">
-            <mat-form-field style="width: 400px">
-              <mat-label>Street Address</mat-label>
-              <input matInput placeholder="Street Address" formControlName="streetAddress">
-            </mat-form-field>
-            <mat-form-field style="width: 400px">
-              <mat-label>Street Address 2</mat-label>
-              <input matInput placeholder="Street Address 2" formControlName="streetAddress2">
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field style="width: 400px">
-              <mat-label>City</mat-label>
-              <input matInput placeholder="City" formControlName="city">
-            </mat-form-field>
-            <mat-form-field style="width: 400px">
-              <mat-label>State</mat-label>
-              <input matInput placeholder="State" formControlName="state">
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field style="width: 400px">
-              <mat-label>Zip/Postal Code</mat-label>
-              <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
-            </mat-form-field>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
           </div>
         </form>
-    </mat-tab>
-    <mat-tab [disabled]="!problemSummaryReady">
-      <ng-template mat-tab-label>
-        <span class="wizard-label" [class.invalid]="currentStepIndex > 2 && problemSummaryFormGroup.invalid">
-          Problem
-        </span>
-        </ng-template>
-        
-        <h2>Problem</h2>
-        
-        <form [formGroup]="problemSummaryFormGroup" (ngSubmit)="problemSummarySubmit()">
-          <div>
-            <mat-form-field style="width: 400px">
-              <mat-label>What is your role?</mat-label>
-              <mat-select formControlName="userType">
-                <mat-option [value]="UserTypes.Patient">Patient</mat-option>
-                <mat-option [value]="UserTypes.Doctor">Doctor</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field style="min-width: 400px; width: 80%">
-              <mat-label>Describe your issue</mat-label>
-              <textarea matInput formControlName="issueVerbatim"></textarea>
-              <mat-hint>Please include any details that may be relevant.</mat-hint>
-            </mat-form-field>
-          </div>
-          <div>
-            <app-image-upload formControlName="images"></app-image-upload>
-          </div>
-        
-        
-          <div style="margin-top: 20px">
-            <button mat-raised-button type="submit">Previous</button>
-            <button mat-raised-button color="primary" type="submit" [disabled]="problemSummaryFormGroup.invalid">Next</button>
-          </div>
-        </form>
-    </mat-tab>
-    <mat-tab [disabled]="!problemDetailsReady">
-      <ng-template mat-tab-label>
-        <span class="wizard-label" [class.invalid]="currentStepIndex > 2 && problemSummaryFormGroup.invalid">
-          Problem Details
-        </span>
-        </ng-template>
-        
-        <h2>Problem Details</h2>
-    </mat-tab>
-    <mat-tab label="Review and Submit" [disabled]="!reviewReady">
-      Review and Submit
-    </mat-tab>
-  </mat-tab-group>
-</div>
+      </mat-step>
+      </mat-stepper>
+      </div>

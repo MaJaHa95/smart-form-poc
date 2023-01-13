@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, FormRecord, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { map, Subject, takeUntil } from "rxjs";
 import { IContactInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
@@ -24,6 +24,7 @@ export class AppComponent implements OnDestroy {
   readonly productFormGroup: FormGroup<FormGroupType<IProductInformation>>;
   readonly contactInformationFormGroup: FormGroup<FormGroupType<IContactInformation>>;
   readonly problemSummaryFormGroup: FormGroup<FormGroupType<IProblemSummary>>;
+  readonly problemDetailsFormGroup: FormRecord;
 
   private readonly destroy$ = new Subject<void>();
 
@@ -54,6 +55,8 @@ export class AppComponent implements OnDestroy {
       .subscribe(c => {
         this.problemDetailsReady = c === "VALID";
       });
+
+    this.problemDetailsFormGroup = fb.record({});
 
     activedRoute.queryParamMap
       .pipe(
