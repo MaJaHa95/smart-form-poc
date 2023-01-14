@@ -68,6 +68,15 @@ const allQuestions: Question[] = [{
       {
         name: "Initiate field sample return",
         nextQuestionId: "first_use_of_product"
+      },
+      {
+        name: "Document the reason why",
+        nextQuestionId: "first_use_of_product" 
+        // Multi select
+        // ☐Discarded
+        // ☐Unknown location of product
+        // ☐Other
+        // ☐Unwilling to provide
       }
     ]
   },
@@ -190,8 +199,13 @@ const allQuestions: Question[] = [{
     questionText: "Was a sterile barrier breached",
     options: [
       {
-        name: "Customer unable/unwilling to answer",
-        
+        name: "Customer unable/unwilling to answer"        
+      },
+      {
+        name: "Yes - for needles"        
+      },
+      {
+        name: "Yes – for kit blister"        
       }
     ]
   },
