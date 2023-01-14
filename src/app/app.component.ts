@@ -3,7 +3,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormRecord, ValidatorFn, Validators } from "@angular/forms";
 import { StepperOrientation } from '@angular/material/stepper';
 import { ActivatedRoute } from "@angular/router";
-import { filter, map, Observable, Subject, switchMap, takeUntil } from "rxjs";
+import { filter, map, Observable, of, Subject, switchMap, takeUntil } from "rxjs";
+import { environment } from "src/environments/environment";
 import { Question } from "./questions";
 import { IQuestionsRequest, IQuestionsRequestAnswer, QuestionsService } from "./services/questions.service";
 import { IContactInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
@@ -19,6 +20,8 @@ export class AppComponent implements OnDestroy {
   readonly UserTypes = UserTypes;
 
   title = 'JNJ Smart Form POC';
+
+  readonly authorized$: Observable<boolean>;
 
   readonly productFormGroup: FormGroup<FormGroupType<IProductInformation>>;
   readonly contactInformationFormGroup: FormGroup<FormGroupType<IContactInformation>>;
@@ -138,6 +141,16 @@ export class AppComponent implements OnDestroy {
 
       this.problemDetailsQuestions = problemDetailsQuestions;
     });
+
+    if (environment.token) {
+      this.authorized$ = activedRoute.queryParamMap.pipe(
+        map(c => c.get("token")),
+        map(c => c === environment.token)
+      );
+    }
+    else {
+      this.authorized$ = of(true);
+    }
   }
 
   ngOnDestroy() {

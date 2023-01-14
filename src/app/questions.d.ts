@@ -23,4 +23,21 @@ export interface IMultipleChoiceQuestion<TId extends string = string> extends IQ
     options: IMultipleChoiceOption<TId>[];
 }
 
-export type Question<TId extends string = string> = IFreeTextQuestion<TId> | IMultipleChoiceQuestion<TId>;
+export interface IImageMapOption<TId extends string = string> {
+    value: string;
+
+    x: number;
+    y: number;
+
+    radius: number;
+
+    nextQuestionId?: string;
+}
+
+export interface IImageMapQuestion<TId extends string = string> extends IQuestionBase<"image-map", TId> {
+    questionText?: string;
+    imageUrl: string;
+    areas: IImageMapOption<TId>[];
+}
+
+export type Question<TId extends string = string> = IFreeTextQuestion<TId> | IMultipleChoiceQuestion<TId> | IImageMapQuestion<TId>;
