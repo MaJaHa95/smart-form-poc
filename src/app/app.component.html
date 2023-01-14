@@ -2,7 +2,7 @@
   <span>Report an Issue</span>
 </mat-toolbar>
 
-<div class="wizard-container">
+<div class="wizard-container" *ngIf="authorized$ | async; else notAuthorizedTemplate">
 
   <mat-stepper linear #stepper [orientation]="(stepperOrientation | async)!">
     <mat-step [stepControl]="productFormGroup" [editable]="false">
@@ -163,3 +163,6 @@
     </mat-step>
   </mat-stepper>
 </div>
+<ng-template #notAuthorizedTemplate>
+  Not authorized
+</ng-template>
