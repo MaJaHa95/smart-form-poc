@@ -57,6 +57,78 @@ const allQuestions: Question[] = [{
         name: "I watched videos online"
       }
     ]
+  },
+  {
+    id: "simponi_device_failure_location",
+    type: "image-map",
+    required: true,
+    questionText: "Where did the failure occur?",
+    imageUrl: "https://www.simponihcp.com/sites/www.simponihcp.com/files/injection_experience_autoinjector_desktop_1.png",
+    areas: [
+      {
+        value: "Hidden Needle",
+
+        x: 394,
+        y: 283,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      },
+      {
+        value: "Safety Sleeve",
+
+        x: 440,
+        y: 253,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      },
+      {
+        value: "Tamper-Evident Seal",
+
+        x: 545,
+        y: 317,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      },
+      {
+        value: "Large Viewing Window",
+
+        x: 625,
+        y: 250,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      },
+      {
+        value: "Activation Button",
+
+        x: 750,
+        y: 236,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      },
+      {
+        value: "Easy-to-Grip Shape",
+
+        x: 927,
+        y: 300,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      },
+      {
+        value: "Expiration Date",
+
+        x: 1055,
+        y: 328,
+        radius: 22,
+
+        nextQuestionId: "how_experienced"
+      }
+    ]
   }
 ];
 
@@ -65,7 +137,7 @@ const allQuestionsMap = new Map(allQuestions.map(x => [x.id, x]));
 const brandEntrypoints: Record<string, string> = {
   "Tremfya": "how_experienced",
   "Stelara": "how_experienced",
-  "Simponi": "how_experienced"
+  "Simponi": "simponi_device_failure_location"
 };
 
 @Injectable({
@@ -74,12 +146,12 @@ const brandEntrypoints: Record<string, string> = {
 export class QuestionsService {
   getNextQuestions(request: IQuestionsRequest): Observable<IQuestionsResponse> {
     if (request.answeredQuestions.length === 0) {
-      const brandEntrypoint = brandEntrypoints[request.product.brand];
+      const brandEntrypoint = allQuestionsMap.get(brandEntrypoints[request.product.brand]);
 
       if (brandEntrypoint) {
         return of({
           done: false,
-          questions: [allQuestions[0]]
+          questions: [brandEntrypoint]
         });
       }
       else {
@@ -113,6 +185,11 @@ export class QuestionsService {
       }
       case "multiple-choice": {
         nextQuestionId = lastQuestion.options.find(c => c.name === lastAnswer.response)?.nextQuestionId;
+
+        break;
+      }
+      case "image-map": {
+        nextQuestionId = lastQuestion.areas.find(c => c.value === lastAnswer.response)?.nextQuestionId;
 
         break;
       }

@@ -1,0 +1,11 @@
+.selectable-area {
+    stroke: black;
+    cursor: pointer;
+
+    &.selected-area {
+        fill: url(#SelectedAreaGradient);
+    }
+    &:not(.selected-area) {
+        fill: white;
+    }
+}

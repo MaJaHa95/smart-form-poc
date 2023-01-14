@@ -1,0 +1,16 @@
+<div *ngIf="imageWithDimensions$ | async as imageWithDimensions">
+    <svg width="600" height="200" [attr.viewBox]="'0 0 ' + imageWithDimensions.width + ' ' + imageWithDimensions.height"
+        xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <radialGradient id="SelectedAreaGradient">
+                <stop offset="60%" stop-color="blue" />
+                <stop offset="61%" stop-color="white" />
+            </radialGradient>
+        </defs>
+
+        <image [attr.href]="imageWithDimensions.dataUrl" height="100%" width="100%" />
+        <circle *ngFor="let area of areas" [attr.cx]="area.x" [attr.cy]="area.y" [attr.r]="area.radius"
+            (click)="onAreaClicked(area)" class="selectable-area"
+            [class.selected-area]="area.value === selectedValue" />
+    </svg>
+</div>

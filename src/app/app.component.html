@@ -126,6 +126,11 @@
               </mat-select>
             </mat-form-field>
           </ng-container>
+          <ng-container *ngIf="question.type === 'image-map'">
+            <label *ngIf="question.questionText">{{ question.questionText }}</label>
+            <app-image-map [imageSrc]="question.imageUrl" [areas]="question.areas"
+              [formControlName]="question.id"></app-image-map>
+          </ng-container>
         </div>
 
         <div style="margin-top: 20px">
