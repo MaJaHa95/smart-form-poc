@@ -24,7 +24,7 @@ export interface IQuestionsResponse {
 
 
 const allQuestions: Question[] = [{
-  id: "how_experienced",
+  id: "how_experienced_tremfya",
   type: "multiple-choice",
   required: true,
   questionText: "How experienced are you with Tremfya?",
@@ -41,6 +41,24 @@ const allQuestions: Question[] = [{
     }
   ]
 },
+  {
+    id: "how_experienced_simponi",
+    type: "multiple-choice",
+    required: true,
+    questionText: "How experienced are you with Simponi?",
+    options: [
+      {
+        name: "This was my first time",
+        nextQuestionId: "how_did_you_learn"
+      },
+      {
+        name: "I'm somewhat experienced"
+      },
+      {
+        name: "I've been using it for a long time"
+      }
+    ]
+  },
   {
     id: "how_did_you_learn",
     type: "multiple-choice",
@@ -72,7 +90,7 @@ const allQuestions: Question[] = [{
         y: 283,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       },
       {
         value: "Safety Sleeve",
@@ -81,7 +99,7 @@ const allQuestions: Question[] = [{
         y: 253,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       },
       {
         value: "Tamper-Evident Seal",
@@ -90,7 +108,7 @@ const allQuestions: Question[] = [{
         y: 317,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       },
       {
         value: "Large Viewing Window",
@@ -99,7 +117,7 @@ const allQuestions: Question[] = [{
         y: 250,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       },
       {
         value: "Activation Button",
@@ -108,7 +126,7 @@ const allQuestions: Question[] = [{
         y: 236,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       },
       {
         value: "Easy-to-Grip Shape",
@@ -117,7 +135,7 @@ const allQuestions: Question[] = [{
         y: 300,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       },
       {
         value: "Expiration Date",
@@ -126,7 +144,7 @@ const allQuestions: Question[] = [{
         y: 328,
         radius: 22,
 
-        nextQuestionId: "how_experienced"
+        nextQuestionId: "how_experienced_simponi"
       }
     ]
   }
@@ -135,8 +153,8 @@ const allQuestions: Question[] = [{
 const allQuestionsMap = new Map(allQuestions.map(x => [x.id, x]));
 
 const brandEntrypoints: Record<string, string> = {
-  "Tremfya": "how_experienced",
-  "Stelara": "how_experienced",
+  "Tremfya": "how_experienced_tremfya",
+  "Stelara": "how_experienced_stelara",
   "Simponi": "simponi_device_failure_location"
 };
 
