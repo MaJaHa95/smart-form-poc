@@ -8,7 +8,7 @@
     <mat-step [stepControl]="productFormGroup">
       <form [formGroup]="productFormGroup">
         <ng-template matStepLabel>Preliminary Information</ng-template>
-        
+
         <div>
           <h2>Which best describes the problem?</h2>
           <mat-radio-group formControlName="productQualityComplaint" class="card-list-horizontal-6">
@@ -47,7 +47,7 @@
             </mat-card>
           </mat-radio-group>
         </div>
-        
+
         <div *ngIf="productQualityComplaint === false" style="margin-top: 30px">
           <p style="font-weight: bold; font-size: larger;">If the concern presents an immediate risk to life or health,
             please
@@ -58,11 +58,11 @@
             Monday–Friday, 9:00 AM–8:00 PM ET
           </p>
         </div>
-        
+
         <ng-container *ngIf="productQualityComplaint === true">
-        
+
           <hr />
-        
+
           <div>
             <h2>What is your role?</h2>
             <mat-chip-listbox aria-label="User role selection" formControlName="userType">
@@ -70,7 +70,7 @@
               <mat-chip-option [value]="UserTypes.Doctor">Healthcare Provider</mat-chip-option>
             </mat-chip-listbox>
           </div>
-        
+
           <hr />
           <div>
             <h2>What is the product?</h2>
@@ -83,25 +83,25 @@
                 <mat-option value="Stelara">Stelara</mat-option>
               </mat-select>
             </mat-form-field>
-            </div>
-            <div>
-              <mat-form-field class="default-control-width">
-                <mat-label>Lot Number</mat-label>
-                <input matInput placeholder="Lot Number" formControlName="lotNumber">
-                <mat-hint>You can find this on the product packaging.</mat-hint>
-              </mat-form-field>
-            </div>
+          </div>
+          <div>
+            <mat-form-field class="default-control-width">
+              <mat-label>Lot Number</mat-label>
+              <input matInput placeholder="Lot Number" formControlName="lotNumber">
+              <mat-hint>You can find this on the product packaging.</mat-hint>
+            </mat-form-field>
+          </div>
 
           <div style="margin-top: 20px">
             <button mat-button color="primary" matStepperNext>Next</button>
-            </div>
+          </div>
         </ng-container>
       </form>
     </mat-step>
     <mat-step [stepControl]="personalInformationFormGroup" [editable]="true">
       <form [formGroup]="personalInformationFormGroup">
         <ng-template matStepLabel>Personal Information</ng-template>
-    
+
         <mat-accordion class="accordion-headers-align">
           <mat-expansion-panel [expanded]="personalInformationStep === 0" (opened)="personalInformationStep = 0" hideToggle
             formGroupName="personalData"
@@ -115,7 +115,7 @@
                 <mat-icon>account_circle</mat-icon>
               </mat-panel-description>
             </mat-expansion-panel-header>
-    
+
             <div>
               <mat-form-field class="default-control-width">
                 <mat-label>First Name</mat-label>
@@ -126,7 +126,7 @@
                 <mat-label>Last Name</mat-label>
                 <input matInput placeholder="Last Name" formControlName="lastName">
               </mat-form-field>
-              </div>
+            </div>
 
             <div>
               <mat-form-field class="default-control-width">
@@ -147,55 +147,55 @@
                   <mat-option value="Unspecified">Prefer not to answer</mat-option>
                 </mat-select>
               </mat-form-field>
-            
+
               <ng-container
                 *ngIf="personalInformationFormGroup.controls.personalData.controls.sex.value && personalInformationFormGroup.controls.personalData.controls.sex.value !== 'Male'">
                 <mat-form-field class="default-control-width">
                   <mat-label>Are you currently pregnant?</mat-label>
                   <mat-select formControlName="pregnant">
-                    <mat-option>Yes</mat-option>
-                    <mat-option>No</mat-option>
+                    <mat-option value="Yes">Yes</mat-option>
+                    <mat-option value="No">No</mat-option>
                   </mat-select>
                 </mat-form-field>
               </ng-container>
             </div>
-            
+
             <mat-action-row>
               <button mat-button matStepperPrevious>Previous</button>
               <button mat-button color="primary" (click)="personalInformationStep = 1">Next</button>
             </mat-action-row>
-            </mat-expansion-panel>
-            
-            <mat-expansion-panel [expanded]="personalInformationStep === 1" (opened)="personalInformationStep = 1" hideToggle
-              formGroupName="physicalAddress"
-              (closed)="personalInformationStep = personalInformationStep === 1 ? null : personalInformationStep">
-              <mat-expansion-panel-header
-                [class.invalid]="isExpansionStepInvalid(personalInformationStep, 1, personalInformationFormGroup.controls.physicalAddress)">
-                <mat-panel-title>
-                  Physical Address
-                </mat-panel-title>
-                <mat-panel-description>
-                  <mat-icon>map</mat-icon>
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-            
-              <div>
-                <mat-form-field class="default-control-width">
-                  <mat-label>Street Address</mat-label>
-                  <input matInput placeholder="Street Address" formControlName="streetAddress">
-                </mat-form-field>
-                <mat-form-field class="default-control-width">
-                  <mat-label>Street Address 2</mat-label>
-                  <input matInput placeholder="Street Address 2" formControlName="streetAddress2">
-                </mat-form-field>
-              </div>
-              <div>
-                <mat-form-field class="default-control-width">
-                  <mat-label>City</mat-label>
-                  <input matInput placeholder="City" formControlName="city">
-                </mat-form-field>
-                <mat-form-field class="default-control-width">
-                  <mat-label>State</mat-label>
+          </mat-expansion-panel>
+          
+          <mat-expansion-panel [expanded]="personalInformationStep === 1" (opened)="personalInformationStep = 1" hideToggle
+            formGroupName="physicalAddress"
+            (closed)="personalInformationStep = personalInformationStep === 1 ? null : personalInformationStep">
+            <mat-expansion-panel-header
+              [class.invalid]="isExpansionStepInvalid(personalInformationStep, 1, personalInformationFormGroup.controls.physicalAddress)">
+              <mat-panel-title>
+                Physical Address
+              </mat-panel-title>
+              <mat-panel-description>
+                <mat-icon>map</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          
+            <div>
+              <mat-form-field class="default-control-width">
+                <mat-label>Street Address</mat-label>
+                <input matInput placeholder="Street Address" formControlName="streetAddress">
+              </mat-form-field>
+              <mat-form-field class="default-control-width">
+                <mat-label>Street Address 2</mat-label>
+                <input matInput placeholder="Street Address 2" formControlName="streetAddress2">
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="default-control-width">
+                <mat-label>City</mat-label>
+                <input matInput placeholder="City" formControlName="city">
+              </mat-form-field>
+              <mat-form-field class="default-control-width">
+                <mat-label>State</mat-label>
                 <input type="text" matInput formControlName="stateGroup" required [matAutocomplete]="autoGroup" formControlName="state">
                 <mat-autocomplete #autoGroup="matAutocomplete">
                   <mat-optgroup *ngFor="let group of stateGroupOptions$ | async" [label]="group.letter">
@@ -204,21 +204,21 @@
                     </mat-option>
                   </mat-optgroup>
                 </mat-autocomplete>
+              </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="default-control-width">
+                  <mat-label>Zip/Postal Code</mat-label>
+                  <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
                 </mat-form-field>
-                </div>
-                <div>
-                  <mat-form-field class="default-control-width">
-                    <mat-label>Zip/Postal Code</mat-label>
-                    <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
-                  </mat-form-field>
-                </div>
+              </div>
             <mat-action-row>
               <button mat-button (click)="personalInformationStep = 0">Previous</button>
               <button mat-button color="primary" matStepperNext>Next</button>
             </mat-action-row>
-            </mat-expansion-panel>
-            
-            </mat-accordion>
+          </mat-expansion-panel>
+          
+          </mat-accordion>
 
       </form>
     </mat-step>
@@ -254,7 +254,7 @@
           </ng-container>
           <ng-container *ngIf="question.type === 'multiple-choice'">
 
-            <mat-form-field class="default-control-width">
+            <mat-form-field style="width: 100%">
               <mat-label>{{ question.questionText }}</mat-label>
               <mat-select [formControlName]="question.id">
                 <mat-option *ngFor="let opt of question.options" [value]="opt.name">{{ opt.name }}</mat-option>
@@ -275,6 +275,18 @@
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </ng-container>
+        </div>
+
+        <div *ngIf="problemDetailsFormGroup.controls.done.value">
+          <h3>That's all we need to know for now.</h3>
+        
+          <mat-form-field style="width: 100%">
+            <mat-label>If needed, would it be okay for us to follow up with further questions later?</mat-label>
+            <mat-select formControlName="followUpOkay">
+              <mat-option value="Yes">Yes</mat-option>
+              <mat-option value="No">No</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
 
         <div style="margin-top: 20px">

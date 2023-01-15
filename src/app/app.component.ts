@@ -12,7 +12,9 @@ import { IAddress, IPersonalData, IPersonalInformation, IProblemSummary, IProduc
 
 type FormGroupType<T> = {
   [k in keyof T]:
-  T[k] extends string | DateTime | boolean | File[] | File | null | undefined ? FormControl<T[k]> : FormGroup<FormGroupType<T[k]>>
+  T[k] extends string | DateTime | boolean | File[] | File | null | undefined
+  ? FormControl<T[k]>
+  : FormGroup<FormGroupType<T[k]>>
 };
 
 export interface StateGroup {
@@ -25,6 +27,14 @@ export const _filter = (opt: string[], value: string): string[] => {
 
   return opt.filter(item => item.toLowerCase().includes(filterValue));
 };
+
+interface IProblemDetailsWithDone {
+  done: boolean;
+  questions: Record<string, any>;
+
+  followUpOkay: boolean;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -40,7 +50,7 @@ export class AppComponent implements OnDestroy {
   readonly productFormGroup: FormGroup<FormGroupType<IProductInformation>>;
   readonly personalInformationFormGroup: FormGroup<FormGroupType<IPersonalInformation>>;
   readonly problemSummaryFormGroup: FormGroup<FormGroupType<IProblemSummary>>;
-  readonly problemDetailsFormGroup: FormGroup;
+  readonly problemDetailsFormGroup: FormGroup<FormGroupType<IProblemDetailsWithDone>>;
   readonly problemDetailsQuestionsFormGroup: FormRecord;
   problemDetailsQuestions: Question[] = [];
 
@@ -202,11 +212,11 @@ export class AppComponent implements OnDestroy {
       images: fb.control<File[]>([], { nonNullable: true })
     });
 
-    const problemDetailsDoneControl = fb.control<boolean>(false, [Validators.requiredTrue]);
     this.problemDetailsQuestionsFormGroup = fb.record({});
-    this.problemDetailsFormGroup = fb.group({
-      done: problemDetailsDoneControl,
-      questions: this.problemDetailsQuestionsFormGroup
+    this.problemDetailsFormGroup = fb.group<FormGroupType<IProblemDetailsWithDone>>({
+      done: fb.control<boolean>(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
+      questions: this.problemDetailsQuestionsFormGroup as any,
+      followUpOkay: fb.control<boolean>(false, { nonNullable: true })
     });
     this.problemDetailsQuestionsFormGroup.statusChanges
       .pipe(
@@ -262,7 +272,7 @@ export class AppComponent implements OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(resp => {
       if (resp.done) {
-        problemDetailsDoneControl.setValue(true);
+        this.problemDetailsFormGroup.controls.done.setValue(true);
         return;
       }
 
