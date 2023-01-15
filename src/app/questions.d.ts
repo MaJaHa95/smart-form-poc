@@ -40,4 +40,12 @@ export interface IImageMapQuestion<TId extends string = string> extends IQuestio
     areas: IImageMapOption<TId>[];
 }
 
-export type Question<TId extends string = string> = IFreeTextQuestion<TId> | IMultipleChoiceQuestion<TId> | IImageMapQuestion<TId>;
+export interface IDatePickerQuestion<TId extends string = string> extends IQuestionBase<"date-picker", TId> {
+    questionText: string;
+}
+
+export type Question<TId extends string = string> =
+    | IFreeTextQuestion<TId>
+    | IMultipleChoiceQuestion<TId>
+    | IImageMapQuestion<TId>
+    | IDatePickerQuestion<TId>;

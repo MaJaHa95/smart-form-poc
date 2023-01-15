@@ -5,91 +5,226 @@
 <div class="wizard-container" *ngIf="authorized$ | async; else notAuthorizedTemplate">
 
   <mat-stepper linear #stepper [orientation]="(stepperOrientation | async)!">
-    <mat-step [stepControl]="productFormGroup" [editable]="false">
+    <mat-step [stepControl]="productFormGroup">
       <form [formGroup]="productFormGroup">
-        <ng-template matStepLabel>Product Confirmation</ng-template>
+        <ng-template matStepLabel>Preliminary Information</ng-template>
+        
         <div>
-          <mat-form-field class="default-control-width">
-            <mat-label>Product Brand</mat-label>
-            <mat-select formControlName="brand">
-              <mat-option value="Simponi">Simponi</mat-option>
-              <mat-option value="Tremfya">Tremfya</mat-option>
-              <mat-option value="Stelara">Stelara</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <h2>Which best describes the problem?</h2>
+          <mat-radio-group formControlName="productQualityComplaint" class="card-list-horizontal-6">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-radio-button [value]="false"></mat-radio-button>
+                  Medical Concern
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>The issue has affected or risked health. Examples could include:</p>
+                <ul>
+                  <li>Immediate danger</li>
+                  <li>Allergic reactions</li>
+                  <li>Unexpected side-effects</li>
+                </ul>
+              </mat-card-content>
+            </mat-card>
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-radio-button [value]="true"></mat-radio-button>
+                  Product Quality Concern
+                </mat-card-title>
+                <mat-card-title></mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>The issue does not present an immediate risk to health. Examples include:</p>
+                <ul>
+                  <li>Label misprints</li>
+                  <li>Broken devices</li>
+                  <li>Suspicion of counterfeit</li>
+                </ul>
+              </mat-card-content>
+            </mat-card>
+          </mat-radio-group>
         </div>
-        <div>
-          <mat-form-field class="default-control-width">
-            <mat-label>Lot Number</mat-label>
-            <input matInput placeholder="Lot Number" formControlName="lotNumber">
-            <mat-hint>You can find this on the product packaging.</mat-hint>
-          </mat-form-field>
+        
+        <div *ngIf="productQualityComplaint === false" style="margin-top: 30px">
+          <p style="font-weight: bold; font-size: larger;">If the concern presents an immediate risk to life or health,
+            please
+            call 911.</p>
+          <p style="font-size: medium;">
+            Otherwise, please reach out to us over the phone at <a href="tel:800-526-7736">800-JANSSEN
+              (800-526-7736)</a>
+            Monday–Friday, 9:00 AM–8:00 PM ET
+          </p>
         </div>
-        <div style="margin-top: 20px">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-        </div>
+        
+        <ng-container *ngIf="productQualityComplaint === true">
+        
+          <hr />
+        
+          <div>
+            <h2>What is your role?</h2>
+            <mat-chip-listbox aria-label="User role selection" formControlName="userType">
+              <mat-chip-option [value]="UserTypes.Patient">Patient</mat-chip-option>
+              <mat-chip-option [value]="UserTypes.Doctor">Healthcare Provider</mat-chip-option>
+            </mat-chip-listbox>
+          </div>
+        
+          <hr />
+          <div>
+            <h2>What is the product?</h2>
+
+            <mat-form-field class="default-control-width">
+              <mat-label>Product Brand</mat-label>
+              <mat-select formControlName="brand">
+                <mat-option value="Simponi">Simponi</mat-option>
+                <mat-option value="Tremfya">Tremfya</mat-option>
+                <mat-option value="Stelara">Stelara</mat-option>
+              </mat-select>
+            </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="default-control-width">
+                <mat-label>Lot Number</mat-label>
+                <input matInput placeholder="Lot Number" formControlName="lotNumber">
+                <mat-hint>You can find this on the product packaging.</mat-hint>
+              </mat-form-field>
+            </div>
+
+          <div style="margin-top: 20px">
+            <button mat-button color="primary" matStepperNext>Next</button>
+            </div>
+        </ng-container>
       </form>
     </mat-step>
-    <mat-step [stepControl]="contactInformationFormGroup" [editable]="true">
-      <form [formGroup]="contactInformationFormGroup">
-        <ng-template matStepLabel>Contact Information</ng-template>
-        <div>
-          <mat-form-field class="default-control-width">
-            <mat-label>First Name</mat-label>
-            <input matInput placeholder="First Name" formControlName="firstName">
-          </mat-form-field>
+    <mat-step [stepControl]="personalInformationFormGroup" [editable]="true">
+      <form [formGroup]="personalInformationFormGroup">
+        <ng-template matStepLabel>Personal Information</ng-template>
+    
+        <mat-accordion class="accordion-headers-align">
+          <mat-expansion-panel [expanded]="personalInformationStep === 0" (opened)="personalInformationStep = 0" hideToggle
+            formGroupName="personalData"
+            (closed)="personalInformationStep = personalInformationStep === 0 ? null : personalInformationStep">
+            <mat-expansion-panel-header
+              [class.invalid]="isExpansionStepInvalid(personalInformationStep, 0, personalInformationFormGroup.controls.personalData)">
+              <mat-panel-title>
+                Personal Data
+              </mat-panel-title>
+              <mat-panel-description>
+                <mat-icon>account_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+    
+            <div>
+              <mat-form-field class="default-control-width">
+                <mat-label>First Name</mat-label>
+                <input matInput placeholder="First Name" formControlName="firstName">
+              </mat-form-field>
 
-          <mat-form-field class="default-control-width">
-            <mat-label>Last Name</mat-label>
-            <input matInput placeholder="Last Name" formControlName="lastName">
-          </mat-form-field>
-        </div>
+              <mat-form-field class="default-control-width">
+                <mat-label>Last Name</mat-label>
+                <input matInput placeholder="Last Name" formControlName="lastName">
+              </mat-form-field>
+              </div>
 
-        <div style="margin-top: 20px">
-          <mat-form-field class="default-control-width">
-            <mat-label>Street Address</mat-label>
-            <input matInput placeholder="Street Address" formControlName="streetAddress">
-          </mat-form-field>
-          <mat-form-field class="default-control-width">
-            <mat-label>Street Address 2</mat-label>
-            <input matInput placeholder="Street Address 2" formControlName="streetAddress2">
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="default-control-width">
-            <mat-label>City</mat-label>
-            <input matInput placeholder="City" formControlName="city">
-          </mat-form-field>
-          <mat-form-field class="default-control-width">
-            <mat-label>State</mat-label>
-            <input matInput placeholder="State" formControlName="state">
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="default-control-width">
-            <mat-label>Zip/Postal Code</mat-label>
-            <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
-          </mat-form-field>
-        </div>
-        <div style="margin-top: 20px">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-        </div>
+            <div>
+              <mat-form-field class="default-control-width">
+                <mat-label>What is your birthdate?</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="birthdate">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div style="margin-top: 10px">
+              <mat-form-field class="default-control-width">
+                <mat-label>What is your sex?</mat-label>
+                <mat-select formControlName="sex">
+                  <mat-option value="Male">Male</mat-option>
+                  <mat-option value="Female">Female</mat-option>
+                  <mat-option value="Other">Other</mat-option>
+                  <mat-option value="Unspecified">Prefer not to answer</mat-option>
+                </mat-select>
+              </mat-form-field>
+            
+              <ng-container
+                *ngIf="personalInformationFormGroup.controls.personalData.controls.sex.value && personalInformationFormGroup.controls.personalData.controls.sex.value !== 'Male'">
+                <mat-form-field class="default-control-width">
+                  <mat-label>Are you currently pregnant?</mat-label>
+                  <mat-select formControlName="pregnant">
+                    <mat-option>Yes</mat-option>
+                    <mat-option>No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-container>
+            </div>
+            
+            <mat-action-row>
+              <button mat-button matStepperPrevious>Previous</button>
+              <button mat-button color="primary" (click)="personalInformationStep = 1">Next</button>
+            </mat-action-row>
+            </mat-expansion-panel>
+            
+            <mat-expansion-panel [expanded]="personalInformationStep === 1" (opened)="personalInformationStep = 1" hideToggle
+              formGroupName="physicalAddress"
+              (closed)="personalInformationStep = personalInformationStep === 1 ? null : personalInformationStep">
+              <mat-expansion-panel-header
+                [class.invalid]="isExpansionStepInvalid(personalInformationStep, 1, personalInformationFormGroup.controls.physicalAddress)">
+                <mat-panel-title>
+                  Physical Address
+                </mat-panel-title>
+                <mat-panel-description>
+                  <mat-icon>map</mat-icon>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+            
+              <div>
+                <mat-form-field class="default-control-width">
+                  <mat-label>Street Address</mat-label>
+                  <input matInput placeholder="Street Address" formControlName="streetAddress">
+                </mat-form-field>
+                <mat-form-field class="default-control-width">
+                  <mat-label>Street Address 2</mat-label>
+                  <input matInput placeholder="Street Address 2" formControlName="streetAddress2">
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="default-control-width">
+                  <mat-label>City</mat-label>
+                  <input matInput placeholder="City" formControlName="city">
+                </mat-form-field>
+                <mat-form-field class="default-control-width">
+                  <mat-label>State</mat-label>
+                <input type="text" matInput formControlName="stateGroup" required [matAutocomplete]="autoGroup" formControlName="state">
+                <mat-autocomplete #autoGroup="matAutocomplete">
+                  <mat-optgroup *ngFor="let group of stateGroupOptions$ | async" [label]="group.letter">
+                    <mat-option *ngFor="let name of group.names" [value]="name">
+                      {{name}}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-autocomplete>
+                </mat-form-field>
+                </div>
+                <div>
+                  <mat-form-field class="default-control-width">
+                    <mat-label>Zip/Postal Code</mat-label>
+                    <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
+                  </mat-form-field>
+                </div>
+            <mat-action-row>
+              <button mat-button (click)="personalInformationStep = 0">Previous</button>
+              <button mat-button color="primary" matStepperNext>Next</button>
+            </mat-action-row>
+            </mat-expansion-panel>
+            
+            </mat-accordion>
+
       </form>
     </mat-step>
-    <mat-step [stepControl]="problemSummaryFormGroup" [editable]="false" (interacted)="onProblemSummarySubmitted()">
+    <mat-step [stepControl]="problemSummaryFormGroup" (interacted)="onProblemSummarySubmitted()">
       <form [formGroup]="problemSummaryFormGroup">
         <ng-template matStepLabel>Problem Summary</ng-template>
-        <div>
-          <mat-form-field class="default-control-width">
-            <mat-label>What is your role?</mat-label>
-            <mat-select formControlName="userType">
-              <mat-option [value]="UserTypes.Patient">Patient</mat-option>
-              <mat-option [value]="UserTypes.Doctor">Doctor</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
         <div>
           <mat-form-field style="min-width: 400px; width: 80%">
             <mat-label>Describe your issue</mat-label>
@@ -101,8 +236,8 @@
           <app-image-upload formControlName="images" text="Upload images (optional)"></app-image-upload>
         </div>
         <div style="margin-top: 20px">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Previous</button>
+          <button mat-button color="primary" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -131,11 +266,20 @@
             <app-image-map [imageSrc]="question.imageUrl" [areas]="question.areas"
               [formControlName]="question.id"></app-image-map>
           </ng-container>
+          <ng-container *ngIf="question.type === 'date-picker'">
+            <mat-form-field appearance="fill">
+              <mat-label>{{ question.questionText }}</mat-label>
+              <input matInput [matDatepicker]="picker">
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </ng-container>
         </div>
 
         <div style="margin-top: 20px">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Previous</button>
+          <button mat-button color="primary" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -157,8 +301,8 @@
       </section>
 
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button>Submit</button>
+        <button mat-button matStepperPrevious>Previous</button>
+        <button mat-button color="primary">Submit</button>
       </div>
     </mat-step>
   </mat-stepper>

@@ -23,24 +23,25 @@ export interface IQuestionsResponse {
 }
 
 
-const allQuestions: Question[] = [{
-  id: "how_experienced_tremfya",
-  type: "multiple-choice",
-  required: true,
-  questionText: "How experienced are you with Tremfya?",
-  options: [
-    {
-      name: "This was my first time",
-      nextQuestionId: "how_did_you_learn"
-    },
-    {
-      name: "I'm somewhat experienced"
-    },
-    {
-      name: "I've been using it for a long time"
-    }
-  ]
-},
+const allQuestions: Question[] = [
+  {
+    id: "how_experienced_tremfya",
+    type: "multiple-choice",
+    required: true,
+    questionText: "How experienced are you with Tremfya?",
+    options: [
+      {
+        name: "This was my first time",
+        nextQuestionId: "how_did_you_learn"
+      },
+      {
+        name: "I'm somewhat experienced"
+      },
+      {
+        name: "I've been using it for a long time"
+      }
+    ]
+  },
   {
     id: "how_experienced_simponi",
     type: "multiple-choice",

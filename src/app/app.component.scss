@@ -20,3 +20,38 @@
         margin-left: 8px;
     }
 }
+
+.card-list-horizontal-6 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+
+    > mat-card {
+        margin: 10px;
+    }
+
+    flex-direction: row;
+
+    @media screen and (max-width: 1000px) {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+.accordion-headers-align {
+    .mat-expansion-panel-header-description {
+        justify-content: space-between;
+        flex-grow: 0;
+    }
+
+    .mat-mdc-form-field + .mat-mdc-form-field {
+        margin-left: 8px;
+    }
+}
+
+
+mat-expansion-panel-header.invalid {
+    .mat-expansion-panel-header-title,.mat-expansion-panel-header-description {
+        color: red;
+    }
+}
