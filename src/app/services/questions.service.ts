@@ -123,37 +123,41 @@ const allQuestions: Question[] = [
     ]
   },
   {
-    id: "blister_seals",
+    id: "button_stuck",
     type: "multiple-choice",
     required: true,
-    questionText: "Upon opening the product, were any of the blister seals already opened?",
+    questionText: "What happened with the activation button?",
     options: [
       {
-        name: "Yes",
-        nextQuestionId: "sterile_breached"
+        name: "I was not able to press it",
+        nextQuestionId: "who_administered"
       },
       {
-        name: "No",
-        nextQuestionId: "who_administered"
+        name: "Nothing happened when I pressed it",
+        nextQuestionId: "heard_click"
+      },
+      {
+        name: "After pressing it, it became stuck",
+        nextQuestionId: "heard_click"
       }
     ]
   },
   {
-    id: "sterile_breached",
+    id: "heard_click",
     type: "multiple-choice",
     required: true,
-    questionText: "Was a sterile barrier breached?",
+    questionText: "Did the device make any sounds when you pressed the button?",
     options: [
       {
-        name: "Yes, for needles",
-        nextQuestionId: "who_administered"
-      },
-      {
-        name: "Yes, for kit blister",
+        name: "Yes, it made a click",
         nextQuestionId: "who_administered"
       },
       {
         name: "No",
+        nextQuestionId: "who_administered"
+      },
+      {
+        name: "I'm not sure",
         nextQuestionId: "who_administered"
       },
     ]
@@ -254,7 +258,7 @@ const allQuestions: Question[] = [
         y: 317,
         radius: 22,
 
-        nextQuestionId: "blister_seals"
+        nextQuestionId: "who_administered"
       },
       {
         value: "Large Viewing Window",
@@ -272,7 +276,7 @@ const allQuestions: Question[] = [
         y: 236,
         radius: 22,
 
-        nextQuestionId: "who_administered"
+        nextQuestionId: "button_stuck"
       },
       {
         value: "Easy-to-Grip Shape",
