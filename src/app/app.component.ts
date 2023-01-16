@@ -308,8 +308,8 @@ export class AppComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.authorized$.pipe(
-      first(),
-      filter(c => c)
+      filter(c => c),
+      first()
     ).subscribe(() => {
       this.bottomSheet.open(IntroductionBottomSheetComponent, {
         backdropClass: "blurred-backdrop"
