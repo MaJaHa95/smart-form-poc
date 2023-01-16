@@ -38,6 +38,10 @@
     }
 }
 
+.toolbar-spacer {
+    flex: 1 1 auto;
+  }
+
 .accordion-headers-align {
     .mat-expansion-panel-header-description {
         justify-content: space-between;
