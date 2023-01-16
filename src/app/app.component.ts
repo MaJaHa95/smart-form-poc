@@ -1,11 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormRecord, ValidatorFn, Validators } from "@angular/forms";
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { StepperOrientation } from '@angular/material/stepper';
 import { ActivatedRoute } from "@angular/router";
 import { DateTime } from "luxon";
-import { filter, map, Observable, of, startWith, Subject, switchMap, takeUntil } from "rxjs";
+import { filter, first, map, Observable, of, startWith, Subject, switchMap, takeUntil } from "rxjs";
 import { environment } from "src/environments/environment";
+import { IntroductionBottomSheetComponent } from "./bottom-sheets/introduction-bottom-sheet/introduction-bottom-sheet.component";
 import { Question } from "./questions";
 import { IQuestionsRequest, IQuestionsRequestAnswer, QuestionsService } from "./services/questions.service";
 import { IAddress, IPersonalData, IPersonalInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
@@ -40,7 +42,7 @@ interface IProblemDetailsWithDone {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnDestroy, OnInit {
   readonly UserTypes = UserTypes;
 
   title = 'JNJ Smart Form POC';
@@ -161,6 +163,7 @@ export class AppComponent implements OnDestroy {
   private readonly readyForMoreQuestions$ = new Subject<void>();
 
   constructor(
+    private readonly bottomSheet: MatBottomSheet,
     private readonly questionsService: QuestionsService,
     activedRoute: ActivatedRoute,
     fb: FormBuilder,
@@ -300,6 +303,17 @@ export class AppComponent implements OnDestroy {
     else {
       this.authorized$ = of(true);
     }
+  }
+
+  ngOnInit() {
+    this.authorized$.pipe(
+      first(),
+      filter(c => c)
+    ).subscribe(() => {
+      this.bottomSheet.open(IntroductionBottomSheetComponent, {
+        backdropClass: "blurred-backdrop"
+      });
+    })
   }
 
   private _filterGroup(value: string): StateGroup[] {

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LuxonDateAdapter, MatLuxonDateModule } from "@angular/material-luxon-adapter";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatBottomSheetModule } from "@angular/material/bottom-sheet";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatChipsModule } from "@angular/material/chips";
@@ -21,6 +22,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { IntroductionBottomSheetComponent } from './bottom-sheets/introduction-bottom-sheet/introduction-bottom-sheet.component';
 import { ImageMapComponent } from './components/image-map/image-map.component';
 import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 
@@ -28,7 +30,8 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
   declarations: [
     AppComponent,
     ImageUploadComponent,
-    ImageMapComponent
+    ImageMapComponent,
+    IntroductionBottomSheetComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +54,8 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
     MatAutocompleteModule,
     MatRadioModule,
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    MatBottomSheetModule
   ],
   providers: [
     {

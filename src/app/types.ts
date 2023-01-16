@@ -34,7 +34,9 @@ export interface IPersonalInformation {
 
 export enum UserTypes {
     Patient = "patient",
-    Doctor = "doctor"
+    NonHealthcareProfessional = "nonHealthcareProfessional",
+    HealthcareProfessional = "healthcareProfessional",
+    JanssenEmployee = "janssenEmployee"
 }
 
 export interface IProblemSummary {

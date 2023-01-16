@@ -1,7 +1,7 @@
 <mat-toolbar>
-  <span>Report an Issue</span>
+  <span>Event Reporting</span>
   <span class="toolbar-spacer"></span>
-  <img src="/assets/logo.png" />
+  <img alt="Janssen logo" src="/assets/logo.png" />
 </mat-toolbar>
 
 <div class="wizard-container" *ngIf="authorized$ | async; else notAuthorizedTemplate">
@@ -69,7 +69,9 @@
             <h2>What is your role?</h2>
             <mat-chip-listbox aria-label="User role selection" formControlName="userType">
               <mat-chip-option [value]="UserTypes.Patient">Patient</mat-chip-option>
-              <mat-chip-option [value]="UserTypes.Doctor">Healthcare Provider</mat-chip-option>
+              <mat-chip-option [value]="UserTypes.NonHealthcareProfessional">Non-Healthcare Professional</mat-chip-option>
+              <mat-chip-option [value]="UserTypes.HealthcareProfessional">Healthcare Professional</mat-chip-option>
+              <mat-chip-option [value]="UserTypes.JanssenEmployee">Janssen Employee</mat-chip-option>
             </mat-chip-listbox>
           </div>
 

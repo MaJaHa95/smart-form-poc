@@ -1,0 +1,20 @@
+::ng-deep {.blurred-backdrop {
+    backdrop-filter: blur(10px);
+}
+
+}
+
+mat-divider {
+    margin-bottom: 8px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 6px;
+    
+    >.header-title {
+        font-size: x-large;
+    }
+}
