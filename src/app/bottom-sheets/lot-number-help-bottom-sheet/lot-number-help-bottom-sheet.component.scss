@@ -1,0 +1,37 @@
+.image-wrapper {
+    max-width: 500px;
+    overflow: hidden;
+
+    > img {
+        max-width: 100%;
+        transform-origin: 180px 200px;
+        -webkit-transform-origin: 180px 200px;
+
+        animation: pulse 10s ease-in-out 2s infinite alternate;
+        -webkit-animation: pulse 10s ease-in-out 2s infinite alternate;
+    }
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-transform: scale(1);
+    }
+    50% {
+        -webkit-transform: scale(4);
+    }
+    100% {
+        -webkit-transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(4);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

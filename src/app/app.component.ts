@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 import { filter, first, map, Observable, of, startWith, Subject, switchMap, takeUntil } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IntroductionBottomSheetComponent } from "./bottom-sheets/introduction-bottom-sheet/introduction-bottom-sheet.component";
+import { LotNumberHelpBottomSheetComponent } from "./bottom-sheets/lot-number-help-bottom-sheet/lot-number-help-bottom-sheet.component";
 import { Question } from "./questions";
 import { IQuestionsRequest, IQuestionsRequestAnswer, QuestionsService } from "./services/questions.service";
 import { IAddress, IPersonalData, IPersonalInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
@@ -362,6 +363,10 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     return true;
+  }
+
+  showLotNumberHelp() {
+    this.bottomSheet.open(LotNumberHelpBottomSheetComponent);
   }
 
   private getNextQuestions() {

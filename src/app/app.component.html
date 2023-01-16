@@ -92,7 +92,9 @@
             <mat-form-field class="default-control-width">
               <mat-label>Lot Number</mat-label>
               <input matInput placeholder="Lot Number" formControlName="lotNumber">
-              <mat-hint>You can find this on the product packaging.</mat-hint>
+              <button mat-icon-button matSuffix (click)="showLotNumberHelp()" [attr.aria-label]="'Help finding this'">
+                <mat-icon>help</mat-icon>
+              </button>
             </mat-form-field>
           </div>
 
