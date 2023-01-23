@@ -20,7 +20,7 @@
         <mat-list-item *ngFor="let image of images">
             <img matListItemAvatar src="{{ image.previewUrl }}" alt="{{ image.file.name }}">
             <h3 matListItemTitle>{{ image.file.name }}</h3>
-            <span matListItemLine><a role="button" href (click)="removeImage(image)">Remove</a></span>
+            <span matListItemLine><a role="button" type="button" (click)="removeImage(image)">Remove</a></span>
         </mat-list-item>
     </mat-list>
 </div>
