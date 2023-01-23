@@ -250,6 +250,9 @@
     <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true">
       <form [formGroup]="problemDetailsQuestionsFormGroup">
         <ng-template matStepLabel>Problem Details</ng-template>
+        <div style="float: right">
+          <button type="button" (click)="resetProblemDetails()" mat-button color="danger">Reset</button>
+        </div>
         <div *ngFor="let question of problemDetailsQuestions">
           <ng-container *ngIf="question.type === 'free-text'">
             <mat-form-field style="min-width: 400px; width: 80%">

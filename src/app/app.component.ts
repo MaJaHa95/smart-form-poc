@@ -280,6 +280,8 @@ export class AppComponent implements OnDestroy, OnInit {
         return;
       }
 
+      this.problemDetailsFormGroup.controls.done.setValue(false);
+
       const problemDetailsQuestions = [...this.problemDetailsQuestions];
 
       for (const question of resp.questions) {
@@ -335,7 +337,11 @@ export class AppComponent implements OnDestroy, OnInit {
     this.destroy$.next();
   }
 
-  async onProblemSummarySubmitted() {
+  resetProblemDetails() {
+    this.onProblemSummarySubmitted();
+  }
+
+  onProblemSummarySubmitted() {
     for (const k in this.problemDetailsQuestionsFormGroup.controls) {
       if (!Object.prototype.hasOwnProperty.call(this.problemDetailsQuestionsFormGroup.controls, k)) {
         continue;
