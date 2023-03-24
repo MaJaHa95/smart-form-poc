@@ -5,6 +5,7 @@ import { IProductInformation, UserTypes } from "../types";
 
 export interface IQuestionsRequestAnswer {
   questionId: string;
+  reqQuestionText?: string;
   response: string;
 }
 

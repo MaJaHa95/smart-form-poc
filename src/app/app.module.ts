@@ -27,6 +27,8 @@ import { ImageMapComponent } from './components/image-map/image-map.component';
 import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 import { ImageSectionHighlightComponent } from './components/image-section-highlight/image-section-highlight.component';
 import { LotNumberHelpBottomSheetComponent } from './bottom-sheets/lot-number-help-bottom-sheet/lot-number-help-bottom-sheet.component';
+import { DialogComponent } from './dialog/dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { LotNumberHelpBottomSheetComponent } from './bottom-sheets/lot-number-he
     ImageMapComponent,
     IntroductionBottomSheetComponent,
     ImageSectionHighlightComponent,
-    LotNumberHelpBottomSheetComponent
+    LotNumberHelpBottomSheetComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +62,8 @@ import { LotNumberHelpBottomSheetComponent } from './bottom-sheets/lot-number-he
     MatRadioModule,
     MatExpansionModule,
     MatIconModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatDialogModule
   ],
   providers: [
     {

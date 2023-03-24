@@ -6,8 +6,8 @@
 
 <div class="wizard-container" *ngIf="authorized$ | async; else notAuthorizedTemplate">
 
-  <mat-stepper linear #stepper [orientation]="(stepperOrientation | async)!">
-    <mat-step [stepControl]="productFormGroup">
+  <mat-stepper [linear]="true" #stepper [orientation]="(stepperOrientation | async)!">
+    <mat-step [stepControl]="productFormGroup" [completed]="!problemDetailsDone">
       <form [formGroup]="productFormGroup">
         <ng-template matStepLabel>Preliminary Information</ng-template>
 
@@ -104,7 +104,7 @@
         </ng-container>
       </form>
     </mat-step>
-    <mat-step [stepControl]="personalInformationFormGroup" [editable]="true">
+    <mat-step [stepControl]="personalInformationFormGroup" [editable]="true" [completed]="!problemDetailsDone">
       <form [formGroup]="personalInformationFormGroup">
         <ng-template matStepLabel>Personal Information</ng-template>
 
@@ -228,7 +228,7 @@
 
       </form>
     </mat-step>
-    <mat-step [stepControl]="problemSummaryFormGroup" (interacted)="onProblemSummarySubmitted()">
+    <mat-step [stepControl]="problemSummaryFormGroup" (interacted)="onProblemSummarySubmitted()" [completed]="!problemDetailsDone">
       <form [formGroup]="problemSummaryFormGroup">
         <ng-template matStepLabel>Problem Summary</ng-template>
         <div>
@@ -247,7 +247,7 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true">
+    <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true" [completed]="!problemDetailsDone">
       <form [formGroup]="problemDetailsQuestionsFormGroup">
         <ng-template matStepLabel>Problem Details</ng-template>
         <div style="float: right">
@@ -304,28 +304,63 @@
         </div>
       </form>
     </mat-step>
-    <mat-step>
+    <mat-step [completed]="!problemDetailsDone">
       <ng-template matStepLabel>Done</ng-template>
-
-      <section>
-        <h3>Product</h3>
-
-        <dl>
-          <dt>Brand</dt>
-          <dd>{{ productFormGroup.controls["brand"].value }}</dd>
-
-          <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
-            <dt>Batch</dt>
-            <dd>{{ lotNumber }}</dd>
-          </ng-container>
-        </dl>
-      </section>
-
-      <div>
-        <button mat-button matStepperPrevious>Previous</button>
-        <button mat-button color="primary">Submit</button>
+      <div *ngIf="!problemDetailsDone">
+      <div style="text-align:left;">
+        <h3><strong>Product Details</strong></h3>   
       </div>
+      
+      <div style="text-align:left; margin-left: 0;">
+        <table>
+          <tr>
+            <td><strong>Product: </strong></td>
+            <td>{{ productFormGroup.controls["brand"].value }}</td>
+          </tr>
+      
+          <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
+            <tr>
+              <td><strong>Batch  : </strong></td>
+              <td>{{ lotNumber }}</td>
+            </tr>
+          </ng-container>
+        </table>
+      </div>
+      <div>
+      <div style="text-align:left;margin-top: 35px;">
+        <h3><strong>Previously Answered Details</strong></h3>   
+      </div>
+      <div style="text-align:left; margin-left: 0;" ng-if>
+        <table>
+          <tr>
+            <th>Question</th>
+            <th>Response</th>
+          </tr>
+          <tr *ngFor="let question of previouslyAnswered">
+            <td>{{ question.reqQuestionText }}</td>
+            <td>{{ question.response }}</td>
+          </tr>
+        </table>
+      </div>
+     
+      <div style="margin-top: 25px;"></div>      
+        <button mat-button matStepperPrevious>Previous</button>
+        <button mat-button color="primary" (click)="enableConfirmation();">Submit</button>
+      </div>
+    </div>
+    <div  *ngIf="problemDetailsDone" style="text-align:center;margin-top: 50px;">
+      <h3><strong>Thanks for submitting the request, We will contact you if any additional information is required</strong></h3>   
+    </div>
     </mat-step>
+
+    <!-- <mat-step *ngIf="problemDetailsDone">
+      <ng-template matStepLabel>Confirmation</ng-template>      
+      <div style="text-align:center;margin-top: 50px;">
+        <h3><strong>Thanks for submitting the request, We will contact you if any additional information is required</strong></h3>   
+      </div>        
+      
+    </mat-step> -->
+    
   </mat-stepper>
 </div>
 <ng-template #notAuthorizedTemplate>

@@ -2,6 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormRecord, ValidatorFn, Validators } from "@angular/forms";
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { StepperOrientation } from '@angular/material/stepper';
 import { ActivatedRoute } from "@angular/router";
 import { DateTime } from "luxon";
@@ -12,6 +13,7 @@ import { LotNumberHelpBottomSheetComponent } from "./bottom-sheets/lot-number-he
 import { Question } from "./questions";
 import { IQuestionsRequest, IQuestionsRequestAnswer, QuestionsService } from "./services/questions.service";
 import { IAddress, IPersonalData, IPersonalInformation, IProblemSummary, IProductInformation, UserTypes } from "./types";
+import { DialogComponent } from './dialog/dialog.component';
 
 type FormGroupType<T> = {
   [k in keyof T]:
@@ -48,14 +50,17 @@ export class AppComponent implements OnDestroy, OnInit {
 
   title = 'JNJ Smart Form POC';
 
+  problemDetailsDone: boolean = false;
   readonly authorized$: Observable<boolean>;
 
   readonly productFormGroup: FormGroup<FormGroupType<IProductInformation>>;
   readonly personalInformationFormGroup: FormGroup<FormGroupType<IPersonalInformation>>;
   readonly problemSummaryFormGroup: FormGroup<FormGroupType<IProblemSummary>>;
-  readonly problemDetailsFormGroup: FormGroup<FormGroupType<IProblemDetailsWithDone>>;
+  readonly problemDetailsFormGroup: FormGroup<FormGroupType<IProblemDetailsWithDone>>
+  
   readonly problemDetailsQuestionsFormGroup: FormRecord;
   problemDetailsQuestions: Question[] = [];
+  previouslyAnswered: IQuestionsRequestAnswer[] = [];
 
   readonly stepperOrientation: Observable<StepperOrientation>;
   readonly stateGroupOptions$: Observable<StateGroup[]>;
@@ -164,7 +169,8 @@ export class AppComponent implements OnDestroy, OnInit {
   private readonly readyForMoreQuestions$ = new Subject<void>();
 
   constructor(
-    private readonly bottomSheet: MatBottomSheet,
+    private readonly bottomSheet: MatBottomSheet, 
+    private readonly dialog: MatDialog, 
     private readonly questionsService: QuestionsService,
     activedRoute: ActivatedRoute,
     fb: FormBuilder,
@@ -256,9 +262,9 @@ export class AppComponent implements OnDestroy, OnInit {
         const answeredQuestions: IQuestionsRequestAnswer[] = [];
         for (const question of this.problemDetailsQuestions) {
           const response = problemDetails[question.id];
-          answeredQuestions.push({ questionId: question.id, response });
+          answeredQuestions.push({ questionId: question.id, reqQuestionText: question.questionText, response });
         }
-
+        this.previouslyAnswered = answeredQuestions;
         return {
           product: {
             productQualityComplaint: product.productQualityComplaint ?? null,
@@ -268,7 +274,6 @@ export class AppComponent implements OnDestroy, OnInit {
           },
           userType: product.userType!,
           verbatim: problemSummary.issueVerbatim!,
-
           answeredQuestions
         };
       }),
@@ -308,7 +313,7 @@ export class AppComponent implements OnDestroy, OnInit {
     }
   }
 
-  ngOnInit() {
+  ngOnInit() {   
     this.authorized$.pipe(
       filter(c => c),
       first()
@@ -375,6 +380,17 @@ export class AppComponent implements OnDestroy, OnInit {
     this.bottomSheet.open(LotNumberHelpBottomSheetComponent);
   }
 
+  openDialog(): void {    
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        message: 'Thanks for submitting the request, We will contact you if any additional information is required'
+      }
+    });    
+  } 
+  
+  enableConfirmation(): void{
+    this.problemDetailsDone = true;
+  }
   private getNextQuestions() {
     this.readyForMoreQuestions$.next();
   }
