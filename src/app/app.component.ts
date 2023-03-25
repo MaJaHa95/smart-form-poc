@@ -48,12 +48,14 @@ export class AppComponent implements OnDestroy, OnInit {
 
   title = 'JNJ Smart Form POC';
 
+  complaintSubmitted: boolean = false;
   readonly authorized$: Observable<boolean>;
 
   readonly productFormGroup: FormGroup<FormGroupType<IProductInformation>>;
   readonly personalInformationFormGroup: FormGroup<FormGroupType<IPersonalInformation>>;
   readonly problemSummaryFormGroup: FormGroup<FormGroupType<IProblemSummary>>;
-  readonly problemDetailsFormGroup: FormGroup<FormGroupType<IProblemDetailsWithDone>>;
+  readonly problemDetailsFormGroup: FormGroup<FormGroupType<IProblemDetailsWithDone>>
+
   readonly problemDetailsQuestionsFormGroup: FormRecord;
   problemDetailsQuestions: Question[] = [];
 
@@ -268,7 +270,6 @@ export class AppComponent implements OnDestroy, OnInit {
           },
           userType: product.userType!,
           verbatim: problemSummary.issueVerbatim!,
-
           answeredQuestions
         };
       }),
@@ -375,6 +376,9 @@ export class AppComponent implements OnDestroy, OnInit {
     this.bottomSheet.open(LotNumberHelpBottomSheetComponent);
   }
 
+  submitComplaint(): void {
+    this.complaintSubmitted = true;
+  }
   private getNextQuestions() {
     this.readyForMoreQuestions$.next();
   }
