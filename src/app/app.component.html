@@ -111,8 +111,8 @@
         <ng-template matStepLabel>Personal Information</ng-template>
 
         <mat-accordion class="accordion-headers-align">
-          <mat-expansion-panel [expanded]="personalInformationStep === 0" (opened)="personalInformationStep = 0" hideToggle
-            formGroupName="personalData"
+          <mat-expansion-panel [expanded]="personalInformationStep === 0" (opened)="personalInformationStep = 0"
+            hideToggle formGroupName="personalData"
             (closed)="personalInformationStep = personalInformationStep === 0 ? null : personalInformationStep">
             <mat-expansion-panel-header
               [class.invalid]="isExpansionStepInvalid(personalInformationStep, 0, personalInformationFormGroup.controls.personalData)">
@@ -174,8 +174,8 @@
             </mat-action-row>
           </mat-expansion-panel>
 
-          <mat-expansion-panel [expanded]="personalInformationStep === 1" (opened)="personalInformationStep = 1" hideToggle
-            formGroupName="physicalAddress"
+          <mat-expansion-panel [expanded]="personalInformationStep === 1" (opened)="personalInformationStep = 1"
+            hideToggle formGroupName="physicalAddress"
             (closed)="personalInformationStep = personalInformationStep === 1 ? null : personalInformationStep">
             <mat-expansion-panel-header
               [class.invalid]="isExpansionStepInvalid(personalInformationStep, 1, personalInformationFormGroup.controls.physicalAddress)">
@@ -204,7 +204,8 @@
               </mat-form-field>
               <mat-form-field class="default-control-width">
                 <mat-label>State</mat-label>
-                <input type="text" matInput formControlName="stateGroup" required [matAutocomplete]="autoGroup" formControlName="state">
+                <input type="text" matInput formControlName="stateGroup" required [matAutocomplete]="autoGroup"
+                  formControlName="state">
                 <mat-autocomplete #autoGroup="matAutocomplete">
                   <mat-optgroup *ngFor="let group of stateGroupOptions$ | async" [label]="group.letter">
                     <mat-option *ngFor="let name of group.names" [value]="name">
@@ -312,29 +313,29 @@
       <div *ngIf="!complaintSubmitted">
         <div style="text-align:left;">
           <h3><strong>Product</strong></h3>
-          </div>
-          
-          <div style="text-align:left; margin-left: 0;">
-            <table>
+        </div>
+
+        <div style="text-align:left; margin-left: 0;">
+          <table>
+            <tr>
+              <td><strong>Product: </strong></td>
+              <td>{{ productFormGroup.controls["brand"].value }}</td>
+            </tr>
+
+            <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
               <tr>
-                <td><strong>Product: </strong></td>
-                <td>{{ productFormGroup.controls["brand"].value }}</td>
-              </tr>
-          
-              <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
-                <tr>
                 <td><strong>Batch : </strong></td>
                 <td>{{ lotNumber }}</td>
-                </tr>
-                </ng-container>
-                </table>
-                </div>
-                <div>
-                  <div style="text-align:left;margin-top: 35px;">
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+        <div>
+          <div style="text-align:left;margin-top: 35px;">
             <h3><strong>Details</strong></h3>
-            </div>
-            <div style="text-align:left; margin-left: 0;" ng-if>
-              <table>
+          </div>
+          <div style="text-align:left; margin-left: 0;" ng-if>
+            <table>
               <thead>
                 <tr>
                   <th>Question</th>
@@ -348,13 +349,13 @@
                 </tr>
               </tbody>
             </table>
-            </div>
-            
-            <div style="margin-top: 25px;"></div>
-            <button mat-button matStepperPrevious>Previous</button>
+          </div>
+
+          <div style="margin-top: 25px;"></div>
+          <button mat-button matStepperPrevious>Previous</button>
           <button mat-button color="primary" (click)="submitComplaint()">Submit</button>
-          </div>
-          </div>
+        </div>
+      </div>
       <div *ngIf="complaintSubmitted" style="text-align:center;margin-top: 50px;">
         <h3><strong>Thanks for submitting your case!</strong>
         </h3>

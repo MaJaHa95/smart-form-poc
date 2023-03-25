@@ -55,7 +55,7 @@ export class AppComponent implements OnDestroy, OnInit {
   readonly personalInformationFormGroup: FormGroup<FormGroupType<IPersonalInformation>>;
   readonly problemSummaryFormGroup: FormGroup<FormGroupType<IProblemSummary>>;
   readonly problemDetailsFormGroup: FormGroup<FormGroupType<IProblemDetailsWithDone>>
-  
+
   readonly problemDetailsQuestionsFormGroup: FormRecord;
   problemDetailsQuestions: Question[] = [];
 
@@ -166,7 +166,7 @@ export class AppComponent implements OnDestroy, OnInit {
   private readonly readyForMoreQuestions$ = new Subject<void>();
 
   constructor(
-    private readonly bottomSheet: MatBottomSheet, 
+    private readonly bottomSheet: MatBottomSheet,
     private readonly questionsService: QuestionsService,
     activedRoute: ActivatedRoute,
     fb: FormBuilder,
@@ -309,7 +309,7 @@ export class AppComponent implements OnDestroy, OnInit {
     }
   }
 
-  ngOnInit() {   
+  ngOnInit() {
     this.authorized$.pipe(
       filter(c => c),
       first()
