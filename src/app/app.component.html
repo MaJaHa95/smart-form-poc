@@ -6,8 +6,8 @@
 
 <div class="wizard-container" *ngIf="authorized$ | async; else notAuthorizedTemplate">
 
-  <mat-stepper [linear]="true" #stepper [orientation]="(stepperOrientation | async)!">
-    <mat-step [stepControl]="productFormGroup" [completed]="!problemDetailsDone">
+  <mat-stepper linear #stepper [orientation]="(stepperOrientation | async)!">
+    <mat-step [stepControl]="productFormGroup" [editable]="!complaintSubmitted" [completed]="complaintSubmitted">
       <form [formGroup]="productFormGroup">
         <ng-template matStepLabel>Preliminary Information</ng-template>
 
@@ -69,7 +69,8 @@
             <h2>What best describes you?</h2>
             <mat-chip-listbox aria-label="User role selection" formControlName="userType">
               <mat-chip-option [value]="UserTypes.Patient">Patient</mat-chip-option>
-              <mat-chip-option [value]="UserTypes.NonHealthcareProfessional">Non-Healthcare Professional</mat-chip-option>
+              <mat-chip-option [value]="UserTypes.NonHealthcareProfessional">Non-Healthcare
+                Professional</mat-chip-option>
               <mat-chip-option [value]="UserTypes.HealthcareProfessional">Healthcare Professional</mat-chip-option>
               <mat-chip-option [value]="UserTypes.JanssenEmployee">Janssen Employee</mat-chip-option>
             </mat-chip-listbox>
@@ -104,7 +105,8 @@
         </ng-container>
       </form>
     </mat-step>
-    <mat-step [stepControl]="personalInformationFormGroup" [editable]="true" [completed]="!problemDetailsDone">
+    <mat-step [stepControl]="personalInformationFormGroup" [editable]="!complaintSubmitted"
+      [completed]="complaintSubmitted">
       <form [formGroup]="personalInformationFormGroup">
         <ng-template matStepLabel>Personal Information</ng-template>
 
@@ -137,7 +139,7 @@
             <div>
               <mat-form-field class="default-control-width">
                 <mat-label>What is your birthdate?</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="birthdate">
+                <input matInput [matDatepicker]="picker" formControlName="birthdate" autocomplete="bday">
                 <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
@@ -171,7 +173,7 @@
               <button mat-button color="primary" (click)="personalInformationStep = 1">Next</button>
             </mat-action-row>
           </mat-expansion-panel>
-          
+
           <mat-expansion-panel [expanded]="personalInformationStep === 1" (opened)="personalInformationStep = 1" hideToggle
             formGroupName="physicalAddress"
             (closed)="personalInformationStep = personalInformationStep === 1 ? null : personalInformationStep">
@@ -184,7 +186,7 @@
                 <mat-icon>map</mat-icon>
               </mat-panel-description>
             </mat-expansion-panel-header>
-          
+
             <div>
               <mat-form-field class="default-control-width">
                 <mat-label>Street Address</mat-label>
@@ -211,24 +213,24 @@
                   </mat-optgroup>
                 </mat-autocomplete>
               </mat-form-field>
-              </div>
-              <div>
-                <mat-form-field class="default-control-width">
-                  <mat-label>Zip/Postal Code</mat-label>
-                  <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
-                </mat-form-field>
-              </div>
+            </div>
+            <div>
+              <mat-form-field class="default-control-width">
+                <mat-label>Zip/Postal Code</mat-label>
+                <input matInput placeholder="Zip/Postal Code" formControlName="zipPostal">
+              </mat-form-field>
+            </div>
             <mat-action-row>
               <button mat-button (click)="personalInformationStep = 0">Previous</button>
               <button mat-button color="primary" matStepperNext>Next</button>
             </mat-action-row>
           </mat-expansion-panel>
-          
-          </mat-accordion>
+        </mat-accordion>
 
       </form>
     </mat-step>
-    <mat-step [stepControl]="problemSummaryFormGroup" (interacted)="onProblemSummarySubmitted()" [completed]="!problemDetailsDone">
+    <mat-step [stepControl]="problemSummaryFormGroup" (interacted)="onProblemSummarySubmitted()"
+      [editable]="!complaintSubmitted" [completed]="complaintSubmitted">
       <form [formGroup]="problemSummaryFormGroup">
         <ng-template matStepLabel>Problem Summary</ng-template>
         <div>
@@ -247,7 +249,8 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true" [completed]="!problemDetailsDone">
+    <mat-step [stepControl]="problemDetailsFormGroup" [editable]="true" [editable]="!complaintSubmitted"
+      [completed]="complaintSubmitted">
       <form [formGroup]="problemDetailsQuestionsFormGroup">
         <ng-template matStepLabel>Problem Details</ng-template>
         <div style="float: right">
@@ -288,7 +291,7 @@
 
         <div *ngIf="problemDetailsFormGroup.controls.done.value">
           <h3>That's all we need to know for now.</h3>
-        
+
           <mat-form-field style="width: 100%">
             <mat-label>If needed, would it be okay for us to follow up with further questions later?</mat-label>
             <mat-select formControlName="followUpOkay">
@@ -304,53 +307,60 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [completed]="!problemDetailsDone">
+    <mat-step [editable]="!complaintSubmitted" [completed]="complaintSubmitted">
       <ng-template matStepLabel>Done</ng-template>
-      <div *ngIf="!problemDetailsDone">
-      <div style="text-align:left;">
-        <h3><strong>Product Details</strong></h3>   
+      <div *ngIf="!complaintSubmitted">
+        <div style="text-align:left;">
+          <h3><strong>Product</strong></h3>
+          </div>
+          
+          <div style="text-align:left; margin-left: 0;">
+            <table>
+              <tr>
+                <td><strong>Product: </strong></td>
+                <td>{{ productFormGroup.controls["brand"].value }}</td>
+              </tr>
+          
+              <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
+                <tr>
+                <td><strong>Batch : </strong></td>
+                <td>{{ lotNumber }}</td>
+                </tr>
+                </ng-container>
+                </table>
+                </div>
+                <div>
+                  <div style="text-align:left;margin-top: 35px;">
+            <h3><strong>Details</strong></h3>
+            </div>
+            <div style="text-align:left; margin-left: 0;" ng-if>
+              <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Response</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let question of problemDetailsQuestions">
+                  <td>{{ question.questionText }}</td>
+                  <td>{{ problemDetailsQuestionsFormGroup.value[question.id] }}</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+            
+            <div style="margin-top: 25px;"></div>
+            <button mat-button matStepperPrevious>Previous</button>
+          <button mat-button color="primary" (click)="submitComplaint()">Submit</button>
+          </div>
+          </div>
+      <div *ngIf="complaintSubmitted" style="text-align:center;margin-top: 50px;">
+        <h3><strong>Thanks for submitting your case!</strong>
+        </h3>
+        <br />
+        We will contact you if any additional information is required.
       </div>
-      
-      <div style="text-align:left; margin-left: 0;">
-        <table>
-          <tr>
-            <td><strong>Product: </strong></td>
-            <td>{{ productFormGroup.controls["brand"].value }}</td>
-          </tr>
-      
-          <ng-container *ngIf="productFormGroup.controls['lotNumber'].value as lotNumber">
-            <tr>
-              <td><strong>Batch  : </strong></td>
-              <td>{{ lotNumber }}</td>
-            </tr>
-          </ng-container>
-        </table>
-      </div>
-      <div>
-      <div style="text-align:left;margin-top: 35px;">
-        <h3><strong>Previously Answered Details</strong></h3>   
-      </div>
-      <div style="text-align:left; margin-left: 0;" ng-if>
-        <table>
-          <tr>
-            <th>Question</th>
-            <th>Response</th>
-          </tr>
-          <tr *ngFor="let question of previouslyAnswered">
-            <td>{{ question.reqQuestionText }}</td>
-            <td>{{ question.response }}</td>
-          </tr>
-        </table>
-      </div>
-     
-      <div style="margin-top: 25px;"></div>      
-        <button mat-button matStepperPrevious>Previous</button>
-        <button mat-button color="primary" (click)="enableConfirmation();">Submit</button>
-      </div>
-    </div>
-    <div  *ngIf="problemDetailsDone" style="text-align:center;margin-top: 50px;">
-      <h3><strong>Thanks for submitting the request, We will contact you if any additional information is required</strong></h3>   
-    </div>
     </mat-step>
 
     <!-- <mat-step *ngIf="problemDetailsDone">
@@ -360,7 +370,7 @@
       </div>        
       
     </mat-step> -->
-    
+
   </mat-stepper>
 </div>
 <ng-template #notAuthorizedTemplate>

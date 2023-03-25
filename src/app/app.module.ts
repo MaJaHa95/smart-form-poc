@@ -23,12 +23,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IntroductionBottomSheetComponent } from './bottom-sheets/introduction-bottom-sheet/introduction-bottom-sheet.component';
-import { ImageMapComponent } from './components/image-map/image-map.component';
-import { ImageUploadComponent } from './components/image-upload/image-upload.component';
-import { ImageSectionHighlightComponent } from './components/image-section-highlight/image-section-highlight.component';
 import { LotNumberHelpBottomSheetComponent } from './bottom-sheets/lot-number-help-bottom-sheet/lot-number-help-bottom-sheet.component';
-import { DialogComponent } from './dialog/dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { ImageMapComponent } from './components/image-map/image-map.component';
+import { ImageSectionHighlightComponent } from './components/image-section-highlight/image-section-highlight.component';
+import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 
 @NgModule({
   declarations: [
@@ -37,8 +35,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ImageMapComponent,
     IntroductionBottomSheetComponent,
     ImageSectionHighlightComponent,
-    LotNumberHelpBottomSheetComponent,
-    DialogComponent
+    LotNumberHelpBottomSheetComponent
   ],
   imports: [
     BrowserModule,
@@ -62,8 +59,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatRadioModule,
     MatExpansionModule,
     MatIconModule,
-    MatBottomSheetModule,
-    MatDialogModule
+    MatBottomSheetModule
   ],
   providers: [
     {
